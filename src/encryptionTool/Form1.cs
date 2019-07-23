@@ -155,5 +155,17 @@ namespace encryptionTool
             return radio_urlencode_ascii.Checked ? Encoding.ASCII : radio_urlencode_utf8.Checked ? Encoding.UTF8 : Encoding.GetEncoding("GBK");
         }
         #endregion
+
+        private void btnQrCodeGenerate_Click(object sender, EventArgs e)
+        {
+            QrCodeGeneration qrcode = new QrCodeGeneration();
+            Stream stream = qrcode.QrImage(txt_qrcode_text.Text.Trim());
+            Bitmap image = new Bitmap(stream);
+
+            picQrCode.Image = image;
+            picQrCode.Width = image.Width > 469 ? 469 : image.Width;
+            picQrCode.Height = image.Height > 469 ? 469 : image.Height;
+            picQrCode.SizeMode = PictureBoxSizeMode.Zoom;
+        }
     }
 }

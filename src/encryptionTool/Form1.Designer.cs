@@ -163,6 +163,10 @@
             this.radio_urlencode_gbk = new System.Windows.Forms.RadioButton();
             this.radio_urlencode_ascii = new System.Windows.Forms.RadioButton();
             this.radio_urlencode_utf8 = new System.Windows.Forms.RadioButton();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnQrCodeGenerate = new System.Windows.Forms.Button();
+            this.picQrCode = new System.Windows.Forms.PictureBox();
+            this.txt_qrcode_text = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPage_rsa.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -178,6 +182,8 @@
             this.tabPage_md5.SuspendLayout();
             this.tabPage_sha.SuspendLayout();
             this.tabPage_urlencode.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picQrCode)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -190,6 +196,7 @@
             this.tabControl.Controls.Add(this.tabPage_md5);
             this.tabControl.Controls.Add(this.tabPage_sha);
             this.tabControl.Controls.Add(this.tabPage_urlencode);
+            this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tabControl.ItemSize = new System.Drawing.Size(80, 35);
@@ -1624,6 +1631,45 @@
             this.radio_urlencode_utf8.Text = "UTF-8";
             this.radio_urlencode_utf8.UseVisualStyleBackColor = true;
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.btnQrCodeGenerate);
+            this.tabPage1.Controls.Add(this.picQrCode);
+            this.tabPage1.Controls.Add(this.txt_qrcode_text);
+            this.tabPage1.Location = new System.Drawing.Point(4, 39);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(907, 624);
+            this.tabPage1.TabIndex = 8;
+            this.tabPage1.Text = "QRCode";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnQrCodeGenerate
+            // 
+            this.btnQrCodeGenerate.Location = new System.Drawing.Point(430, 585);
+            this.btnQrCodeGenerate.Name = "btnQrCodeGenerate";
+            this.btnQrCodeGenerate.Size = new System.Drawing.Size(469, 33);
+            this.btnQrCodeGenerate.TabIndex = 2;
+            this.btnQrCodeGenerate.Text = "生成二维码";
+            this.btnQrCodeGenerate.UseVisualStyleBackColor = true;
+            this.btnQrCodeGenerate.Click += new System.EventHandler(this.btnQrCodeGenerate_Click);
+            // 
+            // picQrCode
+            // 
+            this.picQrCode.Location = new System.Drawing.Point(430, 6);
+            this.picQrCode.Name = "picQrCode";
+            this.picQrCode.Size = new System.Drawing.Size(469, 94);
+            this.picQrCode.TabIndex = 1;
+            this.picQrCode.TabStop = false;
+            // 
+            // txt_qrcode_text
+            // 
+            this.txt_qrcode_text.Location = new System.Drawing.Point(6, 6);
+            this.txt_qrcode_text.Multiline = true;
+            this.txt_qrcode_text.Name = "txt_qrcode_text";
+            this.txt_qrcode_text.Size = new System.Drawing.Size(418, 612);
+            this.txt_qrcode_text.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1664,6 +1710,9 @@
             this.tabPage_sha.PerformLayout();
             this.tabPage_urlencode.ResumeLayout(false);
             this.tabPage_urlencode.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picQrCode)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1805,6 +1854,10 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.ComboBox cbox_des_cipher_mode;
         private System.Windows.Forms.ComboBox cbox_des_padding_mode;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.PictureBox picQrCode;
+        private System.Windows.Forms.TextBox txt_qrcode_text;
+        private System.Windows.Forms.Button btnQrCodeGenerate;
     }
 }
 
