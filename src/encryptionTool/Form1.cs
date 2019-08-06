@@ -21,8 +21,8 @@ namespace encryptionTool
             cbox_des_plain_encode.SelectedIndex = 0;
             cbox_des_cipher_encode.SelectedIndex = 0;
             cbox_aes_plain_encode.SelectedIndex = 0;
-            cbox_des_cipher_mode.SelectedIndex = 1;
             cbox_des_padding_mode.SelectedIndex = 1;
+            cbox_des_cipher_mode.SelectedIndex = 1;
         }
         #region aes
         private void btn_aes_encrypt_Click(object sender, EventArgs e)
@@ -51,7 +51,7 @@ namespace encryptionTool
         }
         private Encoding GetAesPlainEncoding()
         {
-            return Encoding.GetEncoding(cbox_aes_plain_encode.SelectedText);
+            return Encoding.GetEncoding(cbox_aes_plain_encode.SelectedItem.ToString());
         }
         private void btn_aes_decrypt_Click(object sender, EventArgs e)
         {

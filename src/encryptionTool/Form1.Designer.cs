@@ -80,8 +80,8 @@
             this.txt_private_key = new System.Windows.Forms.TextBox();
             this.btn_genrsa = new System.Windows.Forms.Button();
             this.tabPage_des = new System.Windows.Forms.TabPage();
-            this.cbox_des_cipher_mode = new System.Windows.Forms.ComboBox();
             this.cbox_des_padding_mode = new System.Windows.Forms.ComboBox();
+            this.cbox_des_cipher_mode = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
@@ -730,8 +730,8 @@
             // 
             // tabPage_des
             // 
-            this.tabPage_des.Controls.Add(this.cbox_des_cipher_mode);
             this.tabPage_des.Controls.Add(this.cbox_des_padding_mode);
+            this.tabPage_des.Controls.Add(this.cbox_des_cipher_mode);
             this.tabPage_des.Controls.Add(this.label28);
             this.tabPage_des.Controls.Add(this.label27);
             this.tabPage_des.Controls.Add(this.label26);
@@ -760,35 +760,35 @@
             this.tabPage_des.Text = "DES";
             this.tabPage_des.UseVisualStyleBackColor = true;
             // 
-            // cbox_des_cipher_mode
-            // 
-            this.cbox_des_cipher_mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbox_des_cipher_mode.FormattingEnabled = true;
-            this.cbox_des_cipher_mode.Items.AddRange(new object[] {
-            "None",
-            "PKCS7",
-            "Zeros",
-            "ANSIX923",
-            "ISO10126"});
-            this.cbox_des_cipher_mode.Location = new System.Drawing.Point(516, 144);
-            this.cbox_des_cipher_mode.Name = "cbox_des_cipher_mode";
-            this.cbox_des_cipher_mode.Size = new System.Drawing.Size(129, 20);
-            this.cbox_des_cipher_mode.TabIndex = 20;
-            // 
             // cbox_des_padding_mode
             // 
             this.cbox_des_padding_mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbox_des_padding_mode.FormattingEnabled = true;
             this.cbox_des_padding_mode.Items.AddRange(new object[] {
+            "None",
+            "PKCS7",
+            "Zeros",
+            "ANSIX923",
+            "ISO10126"});
+            this.cbox_des_padding_mode.Location = new System.Drawing.Point(516, 144);
+            this.cbox_des_padding_mode.Name = "cbox_des_padding_mode";
+            this.cbox_des_padding_mode.Size = new System.Drawing.Size(129, 20);
+            this.cbox_des_padding_mode.TabIndex = 20;
+            // 
+            // cbox_des_cipher_mode
+            // 
+            this.cbox_des_cipher_mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbox_des_cipher_mode.FormattingEnabled = true;
+            this.cbox_des_cipher_mode.Items.AddRange(new object[] {
             "CBC",
             "ECB",
             "OFB",
             "CFB",
             "CTS"});
-            this.cbox_des_padding_mode.Location = new System.Drawing.Point(242, 144);
-            this.cbox_des_padding_mode.Name = "cbox_des_padding_mode";
-            this.cbox_des_padding_mode.Size = new System.Drawing.Size(121, 20);
-            this.cbox_des_padding_mode.TabIndex = 19;
+            this.cbox_des_cipher_mode.Location = new System.Drawing.Point(242, 144);
+            this.cbox_des_cipher_mode.Name = "cbox_des_cipher_mode";
+            this.cbox_des_cipher_mode.Size = new System.Drawing.Size(121, 20);
+            this.cbox_des_cipher_mode.TabIndex = 19;
             // 
             // label28
             // 
@@ -1852,8 +1852,8 @@
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.ComboBox cbox_des_cipher_mode;
         private System.Windows.Forms.ComboBox cbox_des_padding_mode;
+        private System.Windows.Forms.ComboBox cbox_des_cipher_mode;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.PictureBox picQrCode;
         private System.Windows.Forms.TextBox txt_qrcode_text;

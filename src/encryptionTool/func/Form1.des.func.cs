@@ -11,8 +11,8 @@ namespace encryptionTool
     {
         private void btnDesEncrypt_Click(object sender, EventArgs e)
         {
-            var cipherMode = (CipherMode)Enum.Parse(typeof(CipherMode), cbox_des_cipher_mode.SelectedText);
-            var paddingMode = (PaddingMode)Enum.Parse(typeof(PaddingMode), cbox_des_padding_mode.SelectedText);
+            var cipherMode = (CipherMode)Enum.Parse(typeof(CipherMode), cbox_des_cipher_mode.SelectedItem.ToString());
+            var paddingMode = (PaddingMode)Enum.Parse(typeof(PaddingMode), cbox_des_padding_mode.SelectedItem.ToString());
             Javirs.Common.Security.DesEncodeDecode des = new Javirs.Common.Security.DesEncodeDecode(
                 txt_des_key.Text.Trim(),
                 cipherMode,
@@ -25,8 +25,8 @@ namespace encryptionTool
 
         private void btnDesDecrypt_Click(object sender, EventArgs e)
         {
-            CipherMode cipherMode = (CipherMode)Enum.Parse(typeof(CipherMode), cbox_des_cipher_mode.SelectedText);
-            PaddingMode paddingMode = (PaddingMode)Enum.Parse(typeof(PaddingMode), cbox_des_padding_mode.SelectedText);
+            CipherMode cipherMode = (CipherMode)Enum.Parse(typeof(CipherMode), cbox_des_cipher_mode.SelectedItem.ToString());
+            PaddingMode paddingMode = (PaddingMode)Enum.Parse(typeof(PaddingMode), cbox_des_padding_mode.SelectedItem.ToString());
             Javirs.Common.Security.DesEncodeDecode des = new Javirs.Common.Security.DesEncodeDecode(
                 txt_des_key.Text.Trim(),
                 cipherMode,
@@ -38,7 +38,7 @@ namespace encryptionTool
         }
         private ICipherEncode GetDesCipherEncode()
         {
-            string cipherMode = cbox_des_cipher_encode.SelectedText.ToLower();
+            string cipherMode = cbox_des_cipher_encode.SelectedItem.ToString().ToLower();
             ICipherEncode encode = null;
             switch (cipherMode)
             {
@@ -56,7 +56,7 @@ namespace encryptionTool
         }
         private Encoding GetDesPlainEncoding()
         {
-            return Encoding.GetEncoding(cbox_aes_plain_encode.SelectedText);
+            return Encoding.GetEncoding(cbox_aes_plain_encode.SelectedItem.ToString());
         }
     }
 }
