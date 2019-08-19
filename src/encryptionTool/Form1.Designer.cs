@@ -47,8 +47,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.btnReadX509 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.radio_key_format_pem = new System.Windows.Forms.RadioButton();
-            this.radio_key_format_xml = new System.Windows.Forms.RadioButton();
+            this.radio_rsa_key_format_pem = new System.Windows.Forms.RadioButton();
+            this.radio_rsa_key_format_xml = new System.Windows.Forms.RadioButton();
             this.btnRsaSignVerify = new System.Windows.Forms.Button();
             this.btnExportCer = new System.Windows.Forms.Button();
             this.btnExportPFX = new System.Windows.Forms.Button();
@@ -167,6 +167,7 @@
             this.btnQrCodeGenerate = new System.Windows.Forms.Button();
             this.picQrCode = new System.Windows.Forms.PictureBox();
             this.txt_qrcode_text = new System.Windows.Forms.TextBox();
+            this.radio_rsa_key_format_pem_pkcs8 = new System.Windows.Forms.RadioButton();
             this.tabControl.SuspendLayout();
             this.tabPage_rsa.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -404,9 +405,9 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(3, 342);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(77, 12);
+            this.label11.Size = new System.Drawing.Size(53, 12);
             this.label11.TabIndex = 36;
-            this.label11.Text = "选择密钥格式";
+            this.label11.Text = "密钥格式";
             // 
             // btnReadX509
             // 
@@ -420,34 +421,35 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.radio_key_format_pem);
-            this.panel1.Controls.Add(this.radio_key_format_xml);
-            this.panel1.Location = new System.Drawing.Point(86, 338);
+            this.panel1.Controls.Add(this.radio_rsa_key_format_pem_pkcs8);
+            this.panel1.Controls.Add(this.radio_rsa_key_format_pem);
+            this.panel1.Controls.Add(this.radio_rsa_key_format_xml);
+            this.panel1.Location = new System.Drawing.Point(62, 338);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(187, 20);
+            this.panel1.Size = new System.Drawing.Size(211, 20);
             this.panel1.TabIndex = 34;
             // 
-            // radio_key_format_pem
+            // radio_rsa_key_format_pem
             // 
-            this.radio_key_format_pem.AutoSize = true;
-            this.radio_key_format_pem.Location = new System.Drawing.Point(95, 3);
-            this.radio_key_format_pem.Name = "radio_key_format_pem";
-            this.radio_key_format_pem.Size = new System.Drawing.Size(89, 16);
-            this.radio_key_format_pem.TabIndex = 32;
-            this.radio_key_format_pem.Text = "PEM格式密钥";
-            this.radio_key_format_pem.UseVisualStyleBackColor = true;
+            this.radio_rsa_key_format_pem.AutoSize = true;
+            this.radio_rsa_key_format_pem.Location = new System.Drawing.Point(47, 3);
+            this.radio_rsa_key_format_pem.Name = "radio_rsa_key_format_pem";
+            this.radio_rsa_key_format_pem.Size = new System.Drawing.Size(77, 16);
+            this.radio_rsa_key_format_pem.TabIndex = 32;
+            this.radio_rsa_key_format_pem.Text = "PEM-pkcs1";
+            this.radio_rsa_key_format_pem.UseVisualStyleBackColor = true;
             // 
-            // radio_key_format_xml
+            // radio_rsa_key_format_xml
             // 
-            this.radio_key_format_xml.AutoSize = true;
-            this.radio_key_format_xml.Checked = true;
-            this.radio_key_format_xml.Location = new System.Drawing.Point(3, 3);
-            this.radio_key_format_xml.Name = "radio_key_format_xml";
-            this.radio_key_format_xml.Size = new System.Drawing.Size(65, 16);
-            this.radio_key_format_xml.TabIndex = 31;
-            this.radio_key_format_xml.TabStop = true;
-            this.radio_key_format_xml.Text = "XML密钥";
-            this.radio_key_format_xml.UseVisualStyleBackColor = true;
+            this.radio_rsa_key_format_xml.AutoSize = true;
+            this.radio_rsa_key_format_xml.Checked = true;
+            this.radio_rsa_key_format_xml.Location = new System.Drawing.Point(3, 3);
+            this.radio_rsa_key_format_xml.Name = "radio_rsa_key_format_xml";
+            this.radio_rsa_key_format_xml.Size = new System.Drawing.Size(41, 16);
+            this.radio_rsa_key_format_xml.TabIndex = 31;
+            this.radio_rsa_key_format_xml.TabStop = true;
+            this.radio_rsa_key_format_xml.Text = "XML";
+            this.radio_rsa_key_format_xml.UseVisualStyleBackColor = true;
             // 
             // btnRsaSignVerify
             // 
@@ -484,9 +486,9 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(3, 373);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(77, 12);
+            this.label10.Size = new System.Drawing.Size(53, 12);
             this.label10.TabIndex = 26;
-            this.label10.Text = "签名摘要算法";
+            this.label10.Text = "摘要算法";
             // 
             // btnBuildCert
             // 
@@ -1670,6 +1672,17 @@
             this.txt_qrcode_text.Size = new System.Drawing.Size(418, 612);
             this.txt_qrcode_text.TabIndex = 0;
             // 
+            // radio_rsa_key_format_pem_pkcs8
+            // 
+            this.radio_rsa_key_format_pem_pkcs8.AutoSize = true;
+            this.radio_rsa_key_format_pem_pkcs8.Location = new System.Drawing.Point(125, 3);
+            this.radio_rsa_key_format_pem_pkcs8.Name = "radio_rsa_key_format_pem_pkcs8";
+            this.radio_rsa_key_format_pem_pkcs8.Size = new System.Drawing.Size(77, 16);
+            this.radio_rsa_key_format_pem_pkcs8.TabIndex = 33;
+            this.radio_rsa_key_format_pem_pkcs8.TabStop = true;
+            this.radio_rsa_key_format_pem_pkcs8.Text = "PEM-pkcs8";
+            this.radio_rsa_key_format_pem_pkcs8.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1761,8 +1774,8 @@
         private System.Windows.Forms.Button btnExportCer;
         private System.Windows.Forms.Button btnExportPFX;
         private System.Windows.Forms.Button btnRsaSignVerify;
-        private System.Windows.Forms.RadioButton radio_key_format_pem;
-        private System.Windows.Forms.RadioButton radio_key_format_xml;
+        private System.Windows.Forms.RadioButton radio_rsa_key_format_pem;
+        private System.Windows.Forms.RadioButton radio_rsa_key_format_xml;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnReadX509;
         private System.Windows.Forms.Label label11;
@@ -1858,6 +1871,7 @@
         private System.Windows.Forms.PictureBox picQrCode;
         private System.Windows.Forms.TextBox txt_qrcode_text;
         private System.Windows.Forms.Button btnQrCodeGenerate;
+        private System.Windows.Forms.RadioButton radio_rsa_key_format_pem_pkcs8;
     }
 }
 

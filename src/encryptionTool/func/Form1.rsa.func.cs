@@ -18,12 +18,30 @@ namespace encryptionTool
         private ICipherEncode GetCipherEncode() => radio_cipher_encode_hex.Checked ? new HexCipherEncode() : radio_cipher_encode_base58.Checked ? (ICipherEncode)new Base58CipherEncode() : new Base64CipherEncode();
         private void DisplayKeyPair(string xml_pvt, string xml_pub)
         {
-            txt_private_key.Text = xml_pvt;
-            txt_public_key.Text = xml_pub;
+            if (radio_rsa_key_format_pem.Checked)
+            {
+                var rsaHelper = RsaKeyHelper.FromXmlKey(xml_pvt);
+
+                rsaHelper.Format = RsaKeyHelper.KeyFormat.pkcs1;
+                txt_private_key.Text = RsaKeyHelper.RemoveKeyStringFormat(rsaHelper.Private, RsaKeyHelper.KeyFormat.pkcs1);
+                txt_public_key.Text = rsaHelper.Public;
+            }
+            //else if (radio_rsa_key_format_pem_pkcs8.Checked)
+            //{
+            //    var rsa = RsaKeyHelper.FromPemPrivateKey(xml_pvt, RsaKeyHelper.KeyFormat.pkcs8);
+            //    rsa.Format = RsaKeyHelper.KeyFormat.pkcs1;
+            //    txt_private_key.Text = RsaKeyHelper.RemoveKeyStringFormat(rsa.Private, RsaKeyHelper.KeyFormat.pkcs1);
+            //    txt_public_key.Text = rsa.Public;
+            //}
+            else
+            {
+                txt_private_key.Text = xml_pvt;
+                txt_public_key.Text = xml_pub;
+            }
         }
         private void btn_genrsa_Click(object sender, EventArgs e)
         {
-            Javirs.Common.Security.RsaCertificate.BuildRsaKey(out string privateKey, out string pubKey);
+            RsaCertificate.BuildRsaKey(out string privateKey, out string pubKey);
             DisplayKeyPair(privateKey, pubKey);
         }
 
@@ -73,7 +91,7 @@ namespace encryptionTool
                 MessageBox.Show("请设置密钥先");
                 return;
             }
-            RSAServiceProvider rsa = new RSAServiceProvider(key);
+            IRsa rsa = GetRsaObject();
             var buffer = rsa.Encrypt(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), false);
 
             string cipher = GetCipherEncode().Encode(buffer);
@@ -94,7 +112,7 @@ namespace encryptionTool
                 return;
             }
             var buffer = GetCipherEncode().Decode(txt_cipher.Text.Trim());
-            RSAServiceProvider rsa = new RSAServiceProvider(key);
+            IRsa rsa = GetRsaObject();
             var plain = rsa.Decrypt(buffer, false);
             txt_plain.Text = GetRsaPlainEncoding().GetString(plain);
         }
@@ -112,12 +130,22 @@ namespace encryptionTool
                 MessageBox.Show("请设置明文");
                 return;
             }
-            RSAServiceProvider rsa = new RSAServiceProvider(txt_private_key.Text.Trim());
+            IRsa rsa = GetRsaObject();
             string signature = rsa.SignData(Encoding.UTF8.GetBytes(txt_plain.Text.Trim()), althm);
             byte[] buffer = Convert.FromBase64String(signature);
             txt_signature.Text = GetCipherEncode().Encode(buffer);
         }
-
+        private IRsa GetRsaObject()
+        {
+            if (radio_rsa_key_format_pem.Checked)
+            {
+                return PemCertificate.ReadFromKeyString(txt_private_key.Text.Trim());
+            }
+            else
+            {
+                return new RSAServiceProvider(txt_private_key.Text.Trim());
+            }
+        }
         private void btnRsaSignVerify_Click(object sender, EventArgs e)
         {
             string althm = radio_sign_hash_md5.Checked ? "MD5" : radio_sign_hash_sha1.Checked ? "SHA1" : "SHA256";
@@ -136,7 +164,7 @@ namespace encryptionTool
                 MessageBox.Show("请设置要验证的签名");
                 return;
             }
-            RSAServiceProvider rsa = new RSAServiceProvider(txt_public_key.Text.Trim());
+            IRsa rsa = GetRsaObject();
             bool res = rsa.VerifyData(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), GetCipherEncode().Decode(txt_signature.Text.Trim()), althm);
             MessageBox.Show(res ? "签名验证OK" : "签名验证不正确");
         }
