@@ -56,7 +56,7 @@ namespace encryptionTool
         }
         private Encoding GetDesPlainEncoding()
         {
-            return Encoding.GetEncoding(cbox_aes_plain_encode.SelectedItem.ToString());
+            return Encoding.GetEncoding(cbox_des_plain_encode.SelectedItem.ToString());
         }
     }
 }
