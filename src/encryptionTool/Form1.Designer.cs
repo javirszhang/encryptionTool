@@ -47,6 +47,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.btnReadX509 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.radio_rsa_key_format_pem_pkcs8 = new System.Windows.Forms.RadioButton();
             this.radio_rsa_key_format_pem = new System.Windows.Forms.RadioButton();
             this.radio_rsa_key_format_xml = new System.Windows.Forms.RadioButton();
             this.btnRsaSignVerify = new System.Windows.Forms.Button();
@@ -167,7 +168,24 @@
             this.btnQrCodeGenerate = new System.Windows.Forms.Button();
             this.picQrCode = new System.Windows.Forms.PictureBox();
             this.txt_qrcode_text = new System.Windows.Forms.TextBox();
-            this.radio_rsa_key_format_pem_pkcs8 = new System.Windows.Forms.RadioButton();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.txt_sign_sourcedata = new System.Windows.Forms.TextBox();
+            this.txt_sign_sign = new System.Windows.Forms.TextBox();
+            this.btn_sign_calculate = new System.Windows.Forms.Button();
+            this.txt_sign_service = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txt_sign_key = new System.Windows.Forms.TextBox();
+            this.txt_sign_body = new System.Windows.Forms.TextBox();
+            this.txt_sign_token = new System.Windows.Forms.TextBox();
+            this.txt_sign_timestamp = new System.Windows.Forms.TextBox();
+            this.txt_sign_path = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage_rsa.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -185,6 +203,7 @@
             this.tabPage_urlencode.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQrCode)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -198,6 +217,7 @@
             this.tabControl.Controls.Add(this.tabPage_sha);
             this.tabControl.Controls.Add(this.tabPage_urlencode);
             this.tabControl.Controls.Add(this.tabPage1);
+            this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tabControl.ItemSize = new System.Drawing.Size(80, 35);
@@ -428,6 +448,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(211, 20);
             this.panel1.TabIndex = 34;
+            // 
+            // radio_rsa_key_format_pem_pkcs8
+            // 
+            this.radio_rsa_key_format_pem_pkcs8.AutoSize = true;
+            this.radio_rsa_key_format_pem_pkcs8.Location = new System.Drawing.Point(125, 3);
+            this.radio_rsa_key_format_pem_pkcs8.Name = "radio_rsa_key_format_pem_pkcs8";
+            this.radio_rsa_key_format_pem_pkcs8.Size = new System.Drawing.Size(77, 16);
+            this.radio_rsa_key_format_pem_pkcs8.TabIndex = 33;
+            this.radio_rsa_key_format_pem_pkcs8.TabStop = true;
+            this.radio_rsa_key_format_pem_pkcs8.Text = "PEM-pkcs8";
+            this.radio_rsa_key_format_pem_pkcs8.UseVisualStyleBackColor = true;
             // 
             // radio_rsa_key_format_pem
             // 
@@ -1672,16 +1703,172 @@
             this.txt_qrcode_text.Size = new System.Drawing.Size(418, 612);
             this.txt_qrcode_text.TabIndex = 0;
             // 
-            // radio_rsa_key_format_pem_pkcs8
+            // tabPage2
             // 
-            this.radio_rsa_key_format_pem_pkcs8.AutoSize = true;
-            this.radio_rsa_key_format_pem_pkcs8.Location = new System.Drawing.Point(125, 3);
-            this.radio_rsa_key_format_pem_pkcs8.Name = "radio_rsa_key_format_pem_pkcs8";
-            this.radio_rsa_key_format_pem_pkcs8.Size = new System.Drawing.Size(77, 16);
-            this.radio_rsa_key_format_pem_pkcs8.TabIndex = 33;
-            this.radio_rsa_key_format_pem_pkcs8.TabStop = true;
-            this.radio_rsa_key_format_pem_pkcs8.Text = "PEM-pkcs8";
-            this.radio_rsa_key_format_pem_pkcs8.UseVisualStyleBackColor = true;
+            this.tabPage2.Controls.Add(this.label36);
+            this.tabPage2.Controls.Add(this.label35);
+            this.tabPage2.Controls.Add(this.txt_sign_sourcedata);
+            this.tabPage2.Controls.Add(this.txt_sign_sign);
+            this.tabPage2.Controls.Add(this.btn_sign_calculate);
+            this.tabPage2.Controls.Add(this.txt_sign_service);
+            this.tabPage2.Controls.Add(this.label34);
+            this.tabPage2.Controls.Add(this.txt_sign_key);
+            this.tabPage2.Controls.Add(this.txt_sign_body);
+            this.tabPage2.Controls.Add(this.txt_sign_token);
+            this.tabPage2.Controls.Add(this.txt_sign_timestamp);
+            this.tabPage2.Controls.Add(this.txt_sign_path);
+            this.tabPage2.Controls.Add(this.label33);
+            this.tabPage2.Controls.Add(this.label32);
+            this.tabPage2.Controls.Add(this.label31);
+            this.tabPage2.Controls.Add(this.label30);
+            this.tabPage2.Controls.Add(this.label29);
+            this.tabPage2.Location = new System.Drawing.Point(4, 39);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(907, 624);
+            this.tabPage2.TabIndex = 9;
+            this.tabPage2.Text = "API签名计算";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(92, 522);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(49, 14);
+            this.label36.TabIndex = 12;
+            this.label36.Text = "签名值";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(78, 442);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(63, 14);
+            this.label35.TabIndex = 11;
+            this.label35.Text = "签名源串";
+            // 
+            // txt_sign_sourcedata
+            // 
+            this.txt_sign_sourcedata.Location = new System.Drawing.Point(164, 439);
+            this.txt_sign_sourcedata.Multiline = true;
+            this.txt_sign_sourcedata.Name = "txt_sign_sourcedata";
+            this.txt_sign_sourcedata.Size = new System.Drawing.Size(657, 58);
+            this.txt_sign_sourcedata.TabIndex = 10;
+            // 
+            // txt_sign_sign
+            // 
+            this.txt_sign_sign.Location = new System.Drawing.Point(164, 519);
+            this.txt_sign_sign.Name = "txt_sign_sign";
+            this.txt_sign_sign.Size = new System.Drawing.Size(657, 23);
+            this.txt_sign_sign.TabIndex = 9;
+            // 
+            // btn_sign_calculate
+            // 
+            this.btn_sign_calculate.Location = new System.Drawing.Point(164, 385);
+            this.btn_sign_calculate.Name = "btn_sign_calculate";
+            this.btn_sign_calculate.Size = new System.Drawing.Size(657, 38);
+            this.btn_sign_calculate.TabIndex = 6;
+            this.btn_sign_calculate.Text = "计算MD5";
+            this.btn_sign_calculate.UseVisualStyleBackColor = true;
+            this.btn_sign_calculate.Click += new System.EventHandler(this.btn_sign_calculate_Click);
+            // 
+            // txt_sign_service
+            // 
+            this.txt_sign_service.Location = new System.Drawing.Point(164, 15);
+            this.txt_sign_service.Name = "txt_sign_service";
+            this.txt_sign_service.Size = new System.Drawing.Size(657, 23);
+            this.txt_sign_service.TabIndex = 0;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(85, 18);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(56, 14);
+            this.label34.TabIndex = 6;
+            this.label34.Text = "service";
+            // 
+            // txt_sign_key
+            // 
+            this.txt_sign_key.Location = new System.Drawing.Point(164, 343);
+            this.txt_sign_key.Name = "txt_sign_key";
+            this.txt_sign_key.Size = new System.Drawing.Size(657, 23);
+            this.txt_sign_key.TabIndex = 5;
+            // 
+            // txt_sign_body
+            // 
+            this.txt_sign_body.Location = new System.Drawing.Point(164, 223);
+            this.txt_sign_body.Multiline = true;
+            this.txt_sign_body.Name = "txt_sign_body";
+            this.txt_sign_body.Size = new System.Drawing.Size(657, 90);
+            this.txt_sign_body.TabIndex = 4;
+            // 
+            // txt_sign_token
+            // 
+            this.txt_sign_token.Location = new System.Drawing.Point(164, 170);
+            this.txt_sign_token.Name = "txt_sign_token";
+            this.txt_sign_token.Size = new System.Drawing.Size(657, 23);
+            this.txt_sign_token.TabIndex = 3;
+            // 
+            // txt_sign_timestamp
+            // 
+            this.txt_sign_timestamp.Location = new System.Drawing.Point(164, 117);
+            this.txt_sign_timestamp.Name = "txt_sign_timestamp";
+            this.txt_sign_timestamp.Size = new System.Drawing.Size(657, 23);
+            this.txt_sign_timestamp.TabIndex = 2;
+            // 
+            // txt_sign_path
+            // 
+            this.txt_sign_path.Location = new System.Drawing.Point(164, 64);
+            this.txt_sign_path.Name = "txt_sign_path";
+            this.txt_sign_path.Size = new System.Drawing.Size(657, 23);
+            this.txt_sign_path.TabIndex = 1;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(113, 346);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(28, 14);
+            this.label33.TabIndex = 4;
+            this.label33.Text = "key";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(106, 226);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(35, 14);
+            this.label32.TabIndex = 3;
+            this.label32.Text = "body";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(99, 173);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(42, 14);
+            this.label31.TabIndex = 2;
+            this.label31.Text = "token";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(71, 120);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(70, 14);
+            this.label30.TabIndex = 1;
+            this.label30.Text = "timestamp";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(106, 67);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(35, 14);
+            this.label29.TabIndex = 0;
+            this.label29.Text = "path";
             // 
             // Form1
             // 
@@ -1726,6 +1913,8 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQrCode)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1872,6 +2061,24 @@
         private System.Windows.Forms.TextBox txt_qrcode_text;
         private System.Windows.Forms.Button btnQrCodeGenerate;
         private System.Windows.Forms.RadioButton radio_rsa_key_format_pem_pkcs8;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TextBox txt_sign_key;
+        private System.Windows.Forms.TextBox txt_sign_body;
+        private System.Windows.Forms.TextBox txt_sign_token;
+        private System.Windows.Forms.TextBox txt_sign_timestamp;
+        private System.Windows.Forms.TextBox txt_sign_path;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox txt_sign_service;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.TextBox txt_sign_sign;
+        private System.Windows.Forms.Button btn_sign_calculate;
+        private System.Windows.Forms.TextBox txt_sign_sourcedata;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label35;
     }
 }
 

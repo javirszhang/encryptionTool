@@ -3,6 +3,7 @@ using Javirs.Common.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -23,6 +24,7 @@ namespace encryptionTool
             cbox_aes_plain_encode.SelectedIndex = 0;
             cbox_des_padding_mode.SelectedIndex = 1;
             cbox_des_cipher_mode.SelectedIndex = 1;
+            txt_sign_key.Text = ConfigurationManager.AppSettings["api_sign_key"];
         }
         #region aes
         private void btn_aes_encrypt_Click(object sender, EventArgs e)
@@ -166,6 +168,29 @@ namespace encryptionTool
             picQrCode.Width = image.Width > 469 ? 469 : image.Width;
             picQrCode.Height = image.Height > 469 ? 469 : image.Height;
             picQrCode.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+
+        private void btn_sign_calculate_Click(object sender, EventArgs e)
+        {
+            string sourceData = "";
+            if (!string.IsNullOrEmpty(txt_sign_service.Text.Trim()))
+            {
+                sourceData += "service=" + txt_sign_service.Text.Trim() + "&";
+            }
+            sourceData += "path=" + txt_sign_path.Text.Trim() + "&";
+            sourceData += "timestamp=" + txt_sign_timestamp.Text.Trim() + "&";
+            if (!string.IsNullOrEmpty(txt_sign_token.Text.Trim()))
+            {
+                sourceData += "token=" + txt_sign_token.Text.Trim() + "&";
+            }
+            if (!string.IsNullOrEmpty(txt_sign_body.Text.Trim()))
+            {
+                sourceData += "body=" + txt_sign_body.Text.Trim() + "&";
+            }
+            sourceData += "key=" + txt_sign_key.Text.Trim();
+            txt_sign_sourcedata.Text = sourceData;
+            string signature = MD5.Encode(sourceData);
+            txt_sign_sign.Text = signature;
         }
     }
 }
