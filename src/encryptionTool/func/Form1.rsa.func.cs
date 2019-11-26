@@ -11,38 +11,41 @@ namespace encryptionTool
 {
     public partial class Form1
     {
+        private string xmlPrivateKey;
+        private string xmlPublicKey;
         private Encoding GetRsaPlainEncoding()
         {
             return radio_plain_encode_ascii.Checked ? Encoding.ASCII : radio_plain_encode_utf8.Checked ? Encoding.UTF8 : Encoding.GetEncoding("GBK");
         }
-        private ICipherEncode GetCipherEncode() => radio_cipher_encode_hex.Checked ? new HexCipherEncode() : radio_cipher_encode_base58.Checked ? (ICipherEncode)new Base58CipherEncode() : new Base64CipherEncode();
-        private void DisplayKeyPair(string xml_pvt, string xml_pub)
+        private ICipherEncode GetRsaCipherEncode() => radio_cipher_encode_hex.Checked ? new HexCipherEncode() : radio_cipher_encode_base58.Checked ? (ICipherEncode)new Base58CipherEncode() : new Base64CipherEncode();
+        private void DisplayKeyPair()
         {
             if (radio_rsa_key_format_pem.Checked)
             {
-                var rsaHelper = RsaKeyHelper.FromXmlKey(xml_pvt);
-
+                var rsaHelper = RsaKeyHelper.FromXmlKey(string.IsNullOrEmpty(xmlPrivateKey) ? xmlPublicKey : xmlPrivateKey);
                 rsaHelper.Format = RsaKeyHelper.KeyFormat.pkcs1;
-                txt_private_key.Text = RsaKeyHelper.RemoveKeyStringFormat(rsaHelper.Private, RsaKeyHelper.KeyFormat.pkcs1);
-                txt_public_key.Text = rsaHelper.Public;
+                txt_private_key.Text = rsaHelper.GetKeyString(true);
+                txt_public_key.Text = rsaHelper.GetKeyString();
             }
-            //else if (radio_rsa_key_format_pem_pkcs8.Checked)
-            //{
-            //    var rsa = RsaKeyHelper.FromPemPrivateKey(xml_pvt, RsaKeyHelper.KeyFormat.pkcs8);
-            //    rsa.Format = RsaKeyHelper.KeyFormat.pkcs1;
-            //    txt_private_key.Text = RsaKeyHelper.RemoveKeyStringFormat(rsa.Private, RsaKeyHelper.KeyFormat.pkcs1);
-            //    txt_public_key.Text = rsa.Public;
-            //}
+            else if (radio_rsa_key_format_pem_pkcs8.Checked)
+            {
+                var rsa = RsaKeyHelper.FromXmlKey(string.IsNullOrEmpty(xmlPrivateKey) ? xmlPublicKey : xmlPrivateKey);
+                rsa.Format = RsaKeyHelper.KeyFormat.pkcs8;
+                txt_private_key.Text = rsa.GetKeyString(true);
+                txt_public_key.Text = rsa.GetKeyString();
+            }
             else
             {
-                txt_private_key.Text = xml_pvt;
-                txt_public_key.Text = xml_pub;
+                txt_private_key.Text = xmlPrivateKey;
+                txt_public_key.Text = xmlPublicKey;
             }
         }
         private void btn_genrsa_Click(object sender, EventArgs e)
         {
             RsaCertificate.BuildRsaKey(out string privateKey, out string pubKey);
-            DisplayKeyPair(privateKey, pubKey);
+            xmlPrivateKey = privateKey;
+            xmlPublicKey = pubKey;
+            DisplayKeyPair();
         }
 
         private void btn_rsa_folder_Click(object sender, EventArgs e)
@@ -63,8 +66,9 @@ namespace encryptionTool
             if (dr == DialogResult.OK)
             {
                 var rsa = Javirs.Common.Security.PemCertificate.ReadFromPemFile(fileDialog.FileName);
-                string pvtKey = rsa.HasPrivateKey ? rsa.PrivateKey : null;
-                DisplayKeyPair(pvtKey, rsa.PublicKey);
+                xmlPrivateKey = rsa.HasPrivateKey ? rsa.PrivateKey : null;
+                xmlPublicKey = rsa.PublicKey;
+                DisplayKeyPair();
             }
         }
 
@@ -80,7 +84,9 @@ namespace encryptionTool
             {
                 rsa = RsaCertificate.ReadFromCert(fullpath);
             }
-            DisplayKeyPair(rsa.HasPrivateKey ? rsa.PrivateKey : null, rsa.PublicKey);
+            xmlPrivateKey = rsa.HasPrivateKey ? rsa.PrivateKey : "";
+            xmlPublicKey = rsa.PublicKey;
+            DisplayKeyPair();
         }
 
         private void btnRsaEncrypt_Click(object sender, EventArgs e)
@@ -91,11 +97,18 @@ namespace encryptionTool
                 MessageBox.Show("请设置密钥先");
                 return;
             }
-            IRsa rsa = GetRsaObject();
-            var buffer = rsa.Encrypt(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), false);
+            try
+            {
+                IRsa rsa = GetRsaObject();
+                var buffer = rsa.Encrypt(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), false);
 
-            string cipher = GetCipherEncode().Encode(buffer);
-            txt_cipher.Text = cipher;
+                string cipher = GetRsaCipherEncode().Encode(buffer);
+                txt_cipher.Text = cipher;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnRsaDecrypt_Click(object sender, EventArgs e)
@@ -111,10 +124,17 @@ namespace encryptionTool
                 MessageBox.Show("请输入要解密的密文");
                 return;
             }
-            var buffer = GetCipherEncode().Decode(txt_cipher.Text.Trim());
-            IRsa rsa = GetRsaObject();
-            var plain = rsa.Decrypt(buffer, false);
-            txt_plain.Text = GetRsaPlainEncoding().GetString(plain);
+            var buffer = GetRsaCipherEncode().Decode(txt_cipher.Text.Trim());
+            try
+            {
+                IRsa rsa = GetRsaObject();
+                var plain = rsa.Decrypt(buffer, false);
+                txt_plain.Text = GetRsaPlainEncoding().GetString(plain);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnRsaSign_Click(object sender, EventArgs e)
@@ -130,14 +150,31 @@ namespace encryptionTool
                 MessageBox.Show("请设置明文");
                 return;
             }
-            IRsa rsa = GetRsaObject();
-            string signature = rsa.SignData(Encoding.UTF8.GetBytes(txt_plain.Text.Trim()), althm);
-            byte[] buffer = Convert.FromBase64String(signature);
-            txt_signature.Text = GetCipherEncode().Encode(buffer);
+            try
+            {
+                IRsa rsa = GetRsaObject();
+                string signature = rsa.SignData(Encoding.UTF8.GetBytes(txt_plain.Text.Trim()), althm);
+                byte[] buffer = Convert.FromBase64String(signature);
+                txt_signature.Text = GetRsaCipherEncode().Encode(buffer);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-        private IRsa GetRsaObject()
+        private IRsa GetRsaObject(bool isPrivate = true)
         {
-            if (radio_rsa_key_format_pem.Checked)
+            string privateKey = txt_private_key.Text.Trim();
+            string pubKey = txt_public_key.Text.Trim();
+            if (isPrivate && string.IsNullOrEmpty(privateKey))
+            {
+                throw new Javirs.Common.Exceptions.InvalidKeyFormatException("请设置私钥先");
+            }
+            if (!isPrivate && string.IsNullOrEmpty(privateKey) && string.IsNullOrEmpty(pubKey))
+            {
+                throw new Javirs.Common.Exceptions.InvalidKeyFormatException("请设置密钥先");
+            }
+            if (radio_rsa_key_format_pem.Checked || radio_rsa_key_format_pem_pkcs8.Checked)
             {
                 return PemCertificate.ReadFromKeyString(txt_private_key.Text.Trim());
             }
@@ -164,9 +201,16 @@ namespace encryptionTool
                 MessageBox.Show("请设置要验证的签名");
                 return;
             }
-            IRsa rsa = GetRsaObject();
-            bool res = rsa.VerifyData(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), GetCipherEncode().Decode(txt_signature.Text.Trim()), althm);
-            MessageBox.Show(res ? "签名验证OK" : "签名验证不正确");
+            try
+            {
+                IRsa rsa = GetRsaObject();
+                bool res = rsa.VerifyData(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), GetRsaCipherEncode().Decode(txt_signature.Text.Trim()), althm);
+                MessageBox.Show(res ? "签名验证OK" : "签名验证不正确");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnBuildCert_Click(object sender, EventArgs e)
