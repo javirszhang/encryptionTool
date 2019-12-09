@@ -186,6 +186,14 @@
             this.label31 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.cb_guid_suffix = new System.Windows.Forms.CheckBox();
+            this.cb_guid_nosplit = new System.Windows.Forms.CheckBox();
+            this.cb_guid_case = new System.Windows.Forms.CheckBox();
+            this.txt_guid_count = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.btn_gen_guid = new System.Windows.Forms.Button();
+            this.txt_guid = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPage_rsa.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -204,6 +212,7 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQrCode)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -218,6 +227,7 @@
             this.tabControl.Controls.Add(this.tabPage_urlencode);
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabPage2);
+            this.tabControl.Controls.Add(this.tabPage3);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tabControl.ItemSize = new System.Drawing.Size(80, 35);
@@ -1870,6 +1880,91 @@
             this.label29.TabIndex = 0;
             this.label29.Text = "path";
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.cb_guid_suffix);
+            this.tabPage3.Controls.Add(this.cb_guid_nosplit);
+            this.tabPage3.Controls.Add(this.cb_guid_case);
+            this.tabPage3.Controls.Add(this.txt_guid_count);
+            this.tabPage3.Controls.Add(this.label37);
+            this.tabPage3.Controls.Add(this.btn_gen_guid);
+            this.tabPage3.Controls.Add(this.txt_guid);
+            this.tabPage3.Location = new System.Drawing.Point(4, 39);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(907, 624);
+            this.tabPage3.TabIndex = 10;
+            this.tabPage3.Text = "GUID";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // cb_guid_suffix
+            // 
+            this.cb_guid_suffix.AutoSize = true;
+            this.cb_guid_suffix.Location = new System.Drawing.Point(301, 86);
+            this.cb_guid_suffix.Name = "cb_guid_suffix";
+            this.cb_guid_suffix.Size = new System.Drawing.Size(96, 18);
+            this.cb_guid_suffix.TabIndex = 6;
+            this.cb_guid_suffix.Text = "包含在\"{}\"";
+            this.cb_guid_suffix.UseVisualStyleBackColor = true;
+            // 
+            // cb_guid_nosplit
+            // 
+            this.cb_guid_nosplit.AutoSize = true;
+            this.cb_guid_nosplit.Checked = true;
+            this.cb_guid_nosplit.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_guid_nosplit.Location = new System.Drawing.Point(150, 86);
+            this.cb_guid_nosplit.Name = "cb_guid_nosplit";
+            this.cb_guid_nosplit.Size = new System.Drawing.Size(131, 18);
+            this.cb_guid_nosplit.TabIndex = 5;
+            this.cb_guid_nosplit.Text = "去掉分隔符（-）";
+            this.cb_guid_nosplit.UseVisualStyleBackColor = true;
+            // 
+            // cb_guid_case
+            // 
+            this.cb_guid_case.AutoSize = true;
+            this.cb_guid_case.Location = new System.Drawing.Point(67, 86);
+            this.cb_guid_case.Name = "cb_guid_case";
+            this.cb_guid_case.Size = new System.Drawing.Size(54, 18);
+            this.cb_guid_case.TabIndex = 4;
+            this.cb_guid_case.Text = "大写";
+            this.cb_guid_case.UseVisualStyleBackColor = true;
+            // 
+            // txt_guid_count
+            // 
+            this.txt_guid_count.Location = new System.Drawing.Point(67, 38);
+            this.txt_guid_count.Name = "txt_guid_count";
+            this.txt_guid_count.Size = new System.Drawing.Size(832, 23);
+            this.txt_guid_count.TabIndex = 3;
+            this.txt_guid_count.Text = "1";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(8, 41);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(35, 14);
+            this.label37.TabIndex = 2;
+            this.label37.Text = "数量";
+            // 
+            // btn_gen_guid
+            // 
+            this.btn_gen_guid.Location = new System.Drawing.Point(8, 188);
+            this.btn_gen_guid.Name = "btn_gen_guid";
+            this.btn_gen_guid.Size = new System.Drawing.Size(891, 39);
+            this.btn_gen_guid.TabIndex = 1;
+            this.btn_gen_guid.Text = "生成GUID↓";
+            this.btn_gen_guid.UseVisualStyleBackColor = true;
+            this.btn_gen_guid.Click += new System.EventHandler(this.btn_gen_guid_Click);
+            // 
+            // txt_guid
+            // 
+            this.txt_guid.Location = new System.Drawing.Point(8, 251);
+            this.txt_guid.Multiline = true;
+            this.txt_guid.Name = "txt_guid";
+            this.txt_guid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_guid.Size = new System.Drawing.Size(891, 365);
+            this.txt_guid.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1915,6 +2010,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picQrCode)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2079,6 +2176,14 @@
         private System.Windows.Forms.TextBox txt_sign_sourcedata;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button btn_gen_guid;
+        private System.Windows.Forms.TextBox txt_guid;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.CheckBox cb_guid_nosplit;
+        private System.Windows.Forms.CheckBox cb_guid_case;
+        private System.Windows.Forms.TextBox txt_guid_count;
+        private System.Windows.Forms.CheckBox cb_guid_suffix;
     }
 }
 

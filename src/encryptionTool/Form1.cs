@@ -192,5 +192,29 @@ namespace encryptionTool
             string signature = MD5.Encode(sourceData);
             txt_sign_sign.Text = signature;
         }
+
+        private void btn_gen_guid_Click(object sender, EventArgs e)
+        {
+            int count = int.Parse(txt_guid_count.Text.Trim());
+            bool upperCase = cb_guid_case.Checked;
+            bool split = cb_guid_nosplit.Checked;
+            bool arround = cb_guid_suffix.Checked;
+            StringBuilder builder = new StringBuilder();
+            for (var i = 1; i <= count; i++)
+            {
+                string format = split ? "N" : null;
+                var g = Guid.NewGuid().ToString(format);
+                if (upperCase)
+                {
+                    g = g.ToUpper();
+                }
+                if (arround)
+                {
+                    g = string.Concat("{", g, "}");
+                }
+                builder.AppendLine(g);
+            }
+            txt_guid.Text = builder.ToString();
+        }
     }
 }
