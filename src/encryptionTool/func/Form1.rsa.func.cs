@@ -11,8 +11,8 @@ namespace encryptionTool
 {
     public partial class Form1
     {
-        private string xmlPrivateKey;
-        private string xmlPublicKey;
+        //private string xmlPrivateKey;
+        //private string xmlPublicKey;
         private Encoding GetRsaPlainEncoding()
         {
             return radio_plain_encode_ascii.Checked ? Encoding.ASCII : radio_plain_encode_utf8.Checked ? Encoding.UTF8 : Encoding.GetEncoding("GBK");
@@ -20,31 +20,119 @@ namespace encryptionTool
         private ICipherEncode GetRsaCipherEncode() => radio_cipher_encode_hex.Checked ? new HexCipherEncode() : radio_cipher_encode_base58.Checked ? (ICipherEncode)new Base58CipherEncode() : new Base64CipherEncode();
         private void DisplayKeyPair()
         {
+            string toFormat = "xml";
             if (radio_rsa_key_format_pem.Checked)
             {
-                var rsaHelper = RsaKeyHelper.FromXmlKey(string.IsNullOrEmpty(xmlPrivateKey) ? xmlPublicKey : xmlPrivateKey);
-                rsaHelper.Format = RsaKeyHelper.KeyFormat.pkcs1;
-                txt_private_key.Text = rsaHelper.GetKeyString(true);
-                txt_public_key.Text = rsaHelper.GetKeyString();
+                toFormat = "pkcs1";
             }
             else if (radio_rsa_key_format_pem_pkcs8.Checked)
             {
-                var rsa = RsaKeyHelper.FromXmlKey(string.IsNullOrEmpty(xmlPrivateKey) ? xmlPublicKey : xmlPrivateKey);
-                rsa.Format = RsaKeyHelper.KeyFormat.pkcs8;
-                txt_private_key.Text = rsa.GetKeyString(true);
-                txt_public_key.Text = rsa.GetKeyString();
+                toFormat = "pkcs8";
+            }
+            if (!string.IsNullOrEmpty(txt_public_key.Text.Trim()))
+            {
+                txt_public_key.Text = TransformKeyFormat(txt_public_key.Text.Trim(), false, toFormat);
+            }
+            if (!string.IsNullOrEmpty(txt_private_key.Text.Trim()))
+            {
+                txt_private_key.Text = TransformKeyFormat(txt_private_key.Text.Trim(), true, toFormat);
+            }
+        }
+        /// <summary>
+        /// 转换密钥格式
+        /// </summary>
+        /// <param name="keyString"></param>
+        /// <param name="isPrivate"></param>
+        /// <param name="toFormat"></param>
+        /// <returns></returns>
+        private static string TransformKeyFormat(string keyString, bool isPrivate, string toFormat)
+        {
+            string fromFormat = DetectKeyStringFormat(keyString, isPrivate);
+            if (fromFormat == toFormat)
+            {
+                return keyString;
+            }
+            RsaKeyHelper helper = null;
+            if (fromFormat == "xml")
+            {
+                helper = RsaKeyHelper.FromXmlKey(keyString);
+            }
+            else if (fromFormat == "pkcs1")
+            {
+                keyString = isPrivate ? RsaKeyHelper.FormatPrivateKey(keyString, RsaKeyHelper.KeyFormat.pkcs1) : RsaKeyHelper.FormatPublicKey(keyString);
+                helper = RsaKeyHelper.FromPemKeyString(keyString);
+            }
+            else if (fromFormat == "pkcs8")
+            {
+                keyString = isPrivate ? RsaKeyHelper.FormatPrivateKey(keyString, RsaKeyHelper.KeyFormat.pkcs8) : RsaKeyHelper.FormatPublicKey(keyString);
+                helper = RsaKeyHelper.FromPemKeyString(keyString);
+            }
+            if (helper == null)
+            {
+                return keyString;
+            }
+            string res = keyString;
+            if (toFormat == "xml")
+            {
+                res = helper.ToXmlString(isPrivate);
+            }
+            else if (toFormat == "pkcs1")
+            {
+                helper.Format = RsaKeyHelper.KeyFormat.pkcs1;
+                res = helper.GetKeyString(isPrivate);
+            }
+            else if (toFormat == "pkcs8")
+            {
+                helper.Format = RsaKeyHelper.KeyFormat.pkcs8;
+                res = helper.GetKeyString(isPrivate);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 检测密钥格式
+        /// </summary>
+        /// <returns></returns>
+        private static string DetectKeyStringFormat(string keyString, bool isPrivate)
+        {
+            if (keyString.StartsWith("<RSAKeyValue>"))
+            {
+                return "xml";
+            }
+            if (!isPrivate)//公钥不分pkcs1或pkcs8，只有私钥才有pkcs1和pkcs8区分
+            {
+                return "pkcs1";
+            }
+            if (keyString.StartsWith("-----"))
+            {
+                if (keyString.Contains("BEGIN RSA PRIVATE KEY"))
+                {
+                    return "pkcs1";
+                }
+                else if (keyString.Contains("BEGIN PRIVATE KEY"))
+                {
+                    return "pkcs8";
+                }
+                else
+                {
+                    return "unknown";
+                }
+            }
+            byte[] keyBytes = Convert.FromBase64String(keyString);
+            if (keyBytes[7] == 2)//第八个字节为【2】表示为pkcs1格式，【48】表示pkcs8格式
+            {
+                return "pkcs1";
             }
             else
             {
-                txt_private_key.Text = xmlPrivateKey;
-                txt_public_key.Text = xmlPublicKey;
+                return "pkcs8";
             }
         }
         private void btn_genrsa_Click(object sender, EventArgs e)
         {
             RsaCertificate.BuildRsaKey(out string privateKey, out string pubKey);
-            xmlPrivateKey = privateKey;
-            xmlPublicKey = pubKey;
+            txt_private_key.Text = privateKey;
+            txt_public_key.Text = pubKey;
             DisplayKeyPair();
         }
 
@@ -66,8 +154,8 @@ namespace encryptionTool
             if (dr == DialogResult.OK)
             {
                 var rsa = Javirs.Common.Security.PemCertificate.ReadFromPemFile(fileDialog.FileName);
-                xmlPrivateKey = rsa.HasPrivateKey ? rsa.PrivateKey : null;
-                xmlPublicKey = rsa.PublicKey;
+                txt_private_key.Text = rsa.HasPrivateKey ? rsa.PrivateKey : null;
+                txt_public_key.Text = rsa.PublicKey;
                 DisplayKeyPair();
             }
         }
@@ -84,8 +172,8 @@ namespace encryptionTool
             {
                 rsa = RsaCertificate.ReadFromCert(fullpath);
             }
-            xmlPrivateKey = rsa.HasPrivateKey ? rsa.PrivateKey : "";
-            xmlPublicKey = rsa.PublicKey;
+            txt_private_key.Text = rsa.HasPrivateKey ? rsa.PrivateKey : "";
+            txt_public_key.Text = rsa.PublicKey;
             DisplayKeyPair();
         }
 
@@ -99,7 +187,7 @@ namespace encryptionTool
             }
             try
             {
-                IRsa rsa = GetRsaObject();
+                IRsa rsa = GetRsaObject(false);
                 var buffer = rsa.Encrypt(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), false);
 
                 string cipher = GetRsaCipherEncode().Encode(buffer);
@@ -166,6 +254,7 @@ namespace encryptionTool
         {
             string privateKey = txt_private_key.Text.Trim();
             string pubKey = txt_public_key.Text.Trim();
+            string keyString = isPrivate ? privateKey : pubKey;
             if (isPrivate && string.IsNullOrEmpty(privateKey))
             {
                 throw new Javirs.Common.Exceptions.InvalidKeyFormatException("请设置私钥先");
@@ -176,11 +265,19 @@ namespace encryptionTool
             }
             if (radio_rsa_key_format_pem.Checked || radio_rsa_key_format_pem_pkcs8.Checked)
             {
-                return PemCertificate.ReadFromKeyString(txt_private_key.Text.Trim());
+                if (keyString.StartsWith("<"))
+                {
+                    throw new Javirs.Common.Exceptions.InvalidKeyFormatException("您设置的密钥可能是XML格式，请选择密钥格式");
+                }
+                return PemCertificate.ReadFromKeyString(keyString);
             }
             else
             {
-                return new RSAServiceProvider(txt_private_key.Text.Trim());
+                if (!keyString.StartsWith("<"))
+                {
+                    throw new Javirs.Common.Exceptions.InvalidKeyFormatException("您设置的密钥不是XML格式，请选择密钥格式");
+                }
+                return new RSAServiceProvider(keyString);
             }
         }
         private void btnRsaSignVerify_Click(object sender, EventArgs e)
@@ -188,7 +285,7 @@ namespace encryptionTool
             string althm = radio_sign_hash_md5.Checked ? "MD5" : radio_sign_hash_sha1.Checked ? "SHA1" : "SHA256";
             if (string.IsNullOrEmpty(txt_public_key.Text.Trim()))
             {
-                MessageBox.Show("请设置私钥先");
+                MessageBox.Show("请设置公钥先");
                 return;
             }
             if (string.IsNullOrEmpty(txt_plain.Text.Trim()))
@@ -203,7 +300,7 @@ namespace encryptionTool
             }
             try
             {
-                IRsa rsa = GetRsaObject();
+                IRsa rsa = GetRsaObject(false);
                 bool res = rsa.VerifyData(GetRsaPlainEncoding().GetBytes(txt_plain.Text.Trim()), GetRsaCipherEncode().Decode(txt_signature.Text.Trim()), althm);
                 MessageBox.Show(res ? "签名验证OK" : "签名验证不正确");
             }
@@ -266,6 +363,16 @@ namespace encryptionTool
             string subject = Path.GetFileNameWithoutExtension(name);
             bool res = RsaCertificate.ExportCertFile(subject, Path.Combine(txt_cert_folder.Text.Trim(), name));
             MessageBox.Show(res ? "导出证书成功" : "导出证书失败");
+        }
+
+        private void OnKeyFormatChange(object sender, EventArgs e)
+        {
+            RadioButton btn = sender as RadioButton;
+            if (btn == null || !btn.Checked)
+            {
+                return;
+            }
+            DisplayKeyPair();
         }
     }
 }

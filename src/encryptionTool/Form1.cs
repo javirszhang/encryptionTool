@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,15 +25,53 @@ namespace encryptionTool
             cbox_aes_plain_encode.SelectedIndex = 0;
             cbox_des_padding_mode.SelectedIndex = 1;
             cbox_des_cipher_mode.SelectedIndex = 1;
+            cb_aes_cipher_mode.SelectedIndex = 1;
+            cb_aes_padding_mode.SelectedIndex = 1;
             txt_sign_key.Text = ConfigurationManager.AppSettings["api_sign_key"];
         }
         #region aes
         private void btn_aes_encrypt_Click(object sender, EventArgs e)
         {
-            AesCryptoProvider aes = new AesCryptoProvider(txt_aes_key.Text.Trim(), check_aes_random.Checked);
+            byte[] keyBytes = getAesKeyBytes();
+            string hexKeyString = keyBytes.Byte2HexString();
+            AesCryptoProvider aes = new AesCryptoProvider(hexKeyString, check_aes_random.Checked);
+            aes.CipherMode = GetAesCipherMode();
+            aes.PaddingMode = GetAesPaddingMode();
             var buff = aes.Encrypt(GetAesPlainEncoding().GetBytes(txt_aes_plain.Text.Trim()));
             string cihper = GetAesCipherEncode().Encode(buff);
             txt_aes_cipher.Text = cihper;
+        }
+        private CipherMode GetAesCipherMode()
+        {
+            string text = cb_aes_cipher_mode.SelectedItem.ToString();
+            return (CipherMode)Enum.Parse(typeof(CipherMode), text, true);
+        }
+        private PaddingMode GetAesPaddingMode()
+        {
+            string text = cb_aes_padding_mode.SelectedItem.ToString();
+            return (PaddingMode)Enum.Parse(typeof(PaddingMode), text, true);
+        }
+        private byte[] getAesKeyBytes()
+        {
+            string keyString = txt_aes_key.Text.Trim();
+            byte[] buffer;
+            if (radio_aes_key_format_ascii.Checked)
+            {
+                buffer = Encoding.ASCII.GetBytes(keyString);
+            }
+            else if (radio_aes_key_format_base64.Checked)
+            {
+                buffer = Convert.FromBase64String(keyString);
+            }
+            else if (radio_aes_key_format_hex.Checked)
+            {
+                buffer = keyString.HexString2ByteArray();
+            }
+            else
+            {
+                buffer = Convert.FromBase64String(keyString);
+            }
+            return buffer;
         }
         private ICipherEncode GetAesCipherEncode()
         {
@@ -57,7 +96,11 @@ namespace encryptionTool
         }
         private void btn_aes_decrypt_Click(object sender, EventArgs e)
         {
-            AesCryptoProvider aes = new AesCryptoProvider(txt_aes_key.Text.Trim(), check_aes_random.Checked);
+            byte[] keyBytes = getAesKeyBytes();
+            string hexKeyString = keyBytes.Byte2HexString();
+            AesCryptoProvider aes = new AesCryptoProvider(hexKeyString, check_aes_random.Checked);
+            aes.CipherMode = GetAesCipherMode();
+            aes.PaddingMode = GetAesPaddingMode();
             var buff = aes.Decrypt(GetAesCipherEncode().Decode(txt_aes_cipher.Text.Trim()));
             string plain = GetAesPlainEncoding().GetString(buff);
             txt_aes_plain.Text = plain;
@@ -103,7 +146,7 @@ namespace encryptionTool
         private void btnMd5Encode_Click(object sender, EventArgs e)
         {
             var buff = GetMD5Encoding().GetBytes(txt_md5_plain.Text.Trim());
-            var result = MD5.Encode(buff);
+            var result = Javirs.Common.Security.MD5.Encode(buff);
             txt_md5_cipher.Text = result.Byte2HexString();
         }
         private Encoding GetMD5Encoding()
@@ -189,7 +232,7 @@ namespace encryptionTool
             }
             sourceData += "key=" + txt_sign_key.Text.Trim();
             txt_sign_sourcedata.Text = sourceData;
-            string signature = MD5.Encode(sourceData);
+            string signature = Javirs.Common.Security.MD5.Encode(sourceData);
             txt_sign_sign.Text = signature;
         }
 

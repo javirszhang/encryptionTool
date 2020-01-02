@@ -109,6 +109,16 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage_aes = new System.Windows.Forms.TabPage();
+            this.cb_aes_cipher_mode = new System.Windows.Forms.ComboBox();
+            this.cb_aes_padding_mode = new System.Windows.Forms.ComboBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.radio_aes_key_format_hex = new System.Windows.Forms.RadioButton();
+            this.radio_aes_key_format_base64 = new System.Windows.Forms.RadioButton();
+            this.radio_aes_key_format_ascii = new System.Windows.Forms.RadioButton();
+            this.label38 = new System.Windows.Forms.Label();
             this.radio_aes_cipher_encode_base58 = new System.Windows.Forms.RadioButton();
             this.radio_aes_cipher_encode_hex = new System.Windows.Forms.RadioButton();
             this.radio_aes_cipher_encode_base64 = new System.Windows.Forms.RadioButton();
@@ -204,6 +214,7 @@
             this.panel6.SuspendLayout();
             this.panel5.SuspendLayout();
             this.tabPage_aes.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.tabPage_base58.SuspendLayout();
             this.tabPage_base64.SuspendLayout();
             this.tabPage_md5.SuspendLayout();
@@ -469,6 +480,7 @@
             this.radio_rsa_key_format_pem_pkcs8.TabStop = true;
             this.radio_rsa_key_format_pem_pkcs8.Text = "PEM-pkcs8";
             this.radio_rsa_key_format_pem_pkcs8.UseVisualStyleBackColor = true;
+            this.radio_rsa_key_format_pem_pkcs8.CheckedChanged += new System.EventHandler(this.OnKeyFormatChange);
             // 
             // radio_rsa_key_format_pem
             // 
@@ -479,6 +491,7 @@
             this.radio_rsa_key_format_pem.TabIndex = 32;
             this.radio_rsa_key_format_pem.Text = "PEM-pkcs1";
             this.radio_rsa_key_format_pem.UseVisualStyleBackColor = true;
+            this.radio_rsa_key_format_pem.CheckedChanged += new System.EventHandler(this.OnKeyFormatChange);
             // 
             // radio_rsa_key_format_xml
             // 
@@ -491,6 +504,7 @@
             this.radio_rsa_key_format_xml.TabStop = true;
             this.radio_rsa_key_format_xml.Text = "XML";
             this.radio_rsa_key_format_xml.UseVisualStyleBackColor = true;
+            this.radio_rsa_key_format_xml.CheckedChanged += new System.EventHandler(this.OnKeyFormatChange);
             // 
             // btnRsaSignVerify
             // 
@@ -1077,6 +1091,13 @@
             // 
             // tabPage_aes
             // 
+            this.tabPage_aes.Controls.Add(this.cb_aes_cipher_mode);
+            this.tabPage_aes.Controls.Add(this.cb_aes_padding_mode);
+            this.tabPage_aes.Controls.Add(this.label39);
+            this.tabPage_aes.Controls.Add(this.label40);
+            this.tabPage_aes.Controls.Add(this.label41);
+            this.tabPage_aes.Controls.Add(this.panel7);
+            this.tabPage_aes.Controls.Add(this.label38);
             this.tabPage_aes.Controls.Add(this.radio_aes_cipher_encode_base58);
             this.tabPage_aes.Controls.Add(this.radio_aes_cipher_encode_hex);
             this.tabPage_aes.Controls.Add(this.radio_aes_cipher_encode_base64);
@@ -1101,10 +1122,120 @@
             this.tabPage_aes.Text = "AES";
             this.tabPage_aes.UseVisualStyleBackColor = true;
             // 
+            // cb_aes_cipher_mode
+            // 
+            this.cb_aes_cipher_mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_aes_cipher_mode.FormattingEnabled = true;
+            this.cb_aes_cipher_mode.Items.AddRange(new object[] {
+            "CBC",
+            "ECB",
+            "OFB",
+            "CFB",
+            "CTS"});
+            this.cb_aes_cipher_mode.Location = new System.Drawing.Point(493, 128);
+            this.cb_aes_cipher_mode.Name = "cb_aes_cipher_mode";
+            this.cb_aes_cipher_mode.Size = new System.Drawing.Size(129, 20);
+            this.cb_aes_cipher_mode.TabIndex = 25;
+            // 
+            // cb_aes_padding_mode
+            // 
+            this.cb_aes_padding_mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_aes_padding_mode.FormattingEnabled = true;
+            this.cb_aes_padding_mode.Items.AddRange(new object[] {
+            "None",
+            "PKCS7",
+            "Zeros",
+            "ANSIX923",
+            "ISO10126"});
+            this.cb_aes_padding_mode.Location = new System.Drawing.Point(219, 128);
+            this.cb_aes_padding_mode.Name = "cb_aes_padding_mode";
+            this.cb_aes_padding_mode.Size = new System.Drawing.Size(121, 20);
+            this.cb_aes_padding_mode.TabIndex = 24;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(434, 131);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(53, 12);
+            this.label39.TabIndex = 23;
+            this.label39.Text = "加密模式";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(160, 131);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(53, 12);
+            this.label40.TabIndex = 22;
+            this.label40.Text = "填充方式";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(38, 131);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(53, 12);
+            this.label41.TabIndex = 21;
+            this.label41.Text = "加密参数";
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.radio_aes_key_format_hex);
+            this.panel7.Controls.Add(this.radio_aes_key_format_base64);
+            this.panel7.Controls.Add(this.radio_aes_key_format_ascii);
+            this.panel7.Location = new System.Drawing.Point(106, 87);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(722, 30);
+            this.panel7.TabIndex = 16;
+            // 
+            // radio_aes_key_format_hex
+            // 
+            this.radio_aes_key_format_hex.AutoSize = true;
+            this.radio_aes_key_format_hex.Checked = true;
+            this.radio_aes_key_format_hex.Location = new System.Drawing.Point(271, 7);
+            this.radio_aes_key_format_hex.Name = "radio_aes_key_format_hex";
+            this.radio_aes_key_format_hex.Size = new System.Drawing.Size(41, 16);
+            this.radio_aes_key_format_hex.TabIndex = 2;
+            this.radio_aes_key_format_hex.TabStop = true;
+            this.radio_aes_key_format_hex.Text = "HEX";
+            this.radio_aes_key_format_hex.UseVisualStyleBackColor = true;
+            // 
+            // radio_aes_key_format_base64
+            // 
+            this.radio_aes_key_format_base64.AutoSize = true;
+            this.radio_aes_key_format_base64.Location = new System.Drawing.Point(136, 7);
+            this.radio_aes_key_format_base64.Name = "radio_aes_key_format_base64";
+            this.radio_aes_key_format_base64.Size = new System.Drawing.Size(59, 16);
+            this.radio_aes_key_format_base64.TabIndex = 1;
+            this.radio_aes_key_format_base64.TabStop = true;
+            this.radio_aes_key_format_base64.Text = "base64";
+            this.radio_aes_key_format_base64.UseVisualStyleBackColor = true;
+            // 
+            // radio_aes_key_format_ascii
+            // 
+            this.radio_aes_key_format_ascii.AutoSize = true;
+            this.radio_aes_key_format_ascii.Location = new System.Drawing.Point(14, 7);
+            this.radio_aes_key_format_ascii.Name = "radio_aes_key_format_ascii";
+            this.radio_aes_key_format_ascii.Size = new System.Drawing.Size(53, 16);
+            this.radio_aes_key_format_ascii.TabIndex = 0;
+            this.radio_aes_key_format_ascii.TabStop = true;
+            this.radio_aes_key_format_ascii.Text = "ASCII";
+            this.radio_aes_key_format_ascii.UseVisualStyleBackColor = true;
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(38, 96);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(53, 12);
+            this.label38.TabIndex = 15;
+            this.label38.Text = "密钥格式";
+            // 
             // radio_aes_cipher_encode_base58
             // 
             this.radio_aes_cipher_encode_base58.AutoSize = true;
-            this.radio_aes_cipher_encode_base58.Location = new System.Drawing.Point(377, 429);
+            this.radio_aes_cipher_encode_base58.Location = new System.Drawing.Point(377, 485);
             this.radio_aes_cipher_encode_base58.Name = "radio_aes_cipher_encode_base58";
             this.radio_aes_cipher_encode_base58.Size = new System.Drawing.Size(59, 16);
             this.radio_aes_cipher_encode_base58.TabIndex = 14;
@@ -1114,7 +1245,7 @@
             // radio_aes_cipher_encode_hex
             // 
             this.radio_aes_cipher_encode_hex.AutoSize = true;
-            this.radio_aes_cipher_encode_hex.Location = new System.Drawing.Point(257, 429);
+            this.radio_aes_cipher_encode_hex.Location = new System.Drawing.Point(257, 485);
             this.radio_aes_cipher_encode_hex.Name = "radio_aes_cipher_encode_hex";
             this.radio_aes_cipher_encode_hex.Size = new System.Drawing.Size(41, 16);
             this.radio_aes_cipher_encode_hex.TabIndex = 13;
@@ -1125,7 +1256,7 @@
             // 
             this.radio_aes_cipher_encode_base64.AutoSize = true;
             this.radio_aes_cipher_encode_base64.Checked = true;
-            this.radio_aes_cipher_encode_base64.Location = new System.Drawing.Point(106, 429);
+            this.radio_aes_cipher_encode_base64.Location = new System.Drawing.Point(106, 485);
             this.radio_aes_cipher_encode_base64.Name = "radio_aes_cipher_encode_base64";
             this.radio_aes_cipher_encode_base64.Size = new System.Drawing.Size(59, 16);
             this.radio_aes_cipher_encode_base64.TabIndex = 12;
@@ -1141,7 +1272,7 @@
             "UTF-8",
             "ASCII",
             "GBK"});
-            this.cbox_aes_plain_encode.Location = new System.Drawing.Point(106, 237);
+            this.cbox_aes_plain_encode.Location = new System.Drawing.Point(106, 293);
             this.cbox_aes_plain_encode.Name = "cbox_aes_plain_encode";
             this.cbox_aes_plain_encode.Size = new System.Drawing.Size(722, 20);
             this.cbox_aes_plain_encode.TabIndex = 11;
@@ -1149,7 +1280,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(38, 240);
+            this.label25.Location = new System.Drawing.Point(38, 296);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(53, 12);
             this.label25.TabIndex = 10;
@@ -1158,7 +1289,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(38, 431);
+            this.label24.Location = new System.Drawing.Point(38, 487);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(53, 12);
             this.label24.TabIndex = 9;
@@ -1166,7 +1297,7 @@
             // 
             // btn_aes_decrypt
             // 
-            this.btn_aes_decrypt.Location = new System.Drawing.Point(460, 471);
+            this.btn_aes_decrypt.Location = new System.Drawing.Point(460, 527);
             this.btn_aes_decrypt.Name = "btn_aes_decrypt";
             this.btn_aes_decrypt.Size = new System.Drawing.Size(88, 33);
             this.btn_aes_decrypt.TabIndex = 8;
@@ -1176,7 +1307,7 @@
             // 
             // btn_aes_encrypt
             // 
-            this.btn_aes_encrypt.Location = new System.Drawing.Point(282, 471);
+            this.btn_aes_encrypt.Location = new System.Drawing.Point(282, 527);
             this.btn_aes_encrypt.Name = "btn_aes_encrypt";
             this.btn_aes_encrypt.Size = new System.Drawing.Size(88, 33);
             this.btn_aes_encrypt.TabIndex = 7;
@@ -1186,7 +1317,7 @@
             // 
             // txt_aes_cipher
             // 
-            this.txt_aes_cipher.Location = new System.Drawing.Point(106, 276);
+            this.txt_aes_cipher.Location = new System.Drawing.Point(106, 332);
             this.txt_aes_cipher.Multiline = true;
             this.txt_aes_cipher.Name = "txt_aes_cipher";
             this.txt_aes_cipher.Size = new System.Drawing.Size(722, 119);
@@ -1194,7 +1325,7 @@
             // 
             // txt_aes_plain
             // 
-            this.txt_aes_plain.Location = new System.Drawing.Point(106, 107);
+            this.txt_aes_plain.Location = new System.Drawing.Point(106, 163);
             this.txt_aes_plain.Multiline = true;
             this.txt_aes_plain.Name = "txt_aes_plain";
             this.txt_aes_plain.Size = new System.Drawing.Size(722, 107);
@@ -1220,7 +1351,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(62, 279);
+            this.label23.Location = new System.Drawing.Point(62, 335);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(29, 12);
             this.label23.TabIndex = 2;
@@ -1229,7 +1360,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(62, 110);
+            this.label22.Location = new System.Drawing.Point(62, 166);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(29, 12);
             this.label22.TabIndex = 1;
@@ -1995,6 +2126,8 @@
             this.panel5.PerformLayout();
             this.tabPage_aes.ResumeLayout(false);
             this.tabPage_aes.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.tabPage_base58.ResumeLayout(false);
             this.tabPage_base58.PerformLayout();
             this.tabPage_base64.ResumeLayout(false);
@@ -2184,6 +2317,16 @@
         private System.Windows.Forms.CheckBox cb_guid_case;
         private System.Windows.Forms.TextBox txt_guid_count;
         private System.Windows.Forms.CheckBox cb_guid_suffix;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.RadioButton radio_aes_key_format_hex;
+        private System.Windows.Forms.RadioButton radio_aes_key_format_base64;
+        private System.Windows.Forms.RadioButton radio_aes_key_format_ascii;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.ComboBox cb_aes_cipher_mode;
+        private System.Windows.Forms.ComboBox cb_aes_padding_mode;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label41;
     }
 }
 
