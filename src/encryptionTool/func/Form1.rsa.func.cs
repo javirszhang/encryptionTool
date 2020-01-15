@@ -162,19 +162,26 @@ namespace encryptionTool
 
         private void btnReadX509_Click(object sender, EventArgs e)
         {
-            string fullpath = Path.Combine(txt_cert_folder.Text.Trim(), txt_cert_name.Text.Trim());
-            IRsa rsa;
-            if (fullpath.ToLower().EndsWith(".pfx"))
+            try
             {
-                rsa = RsaCertificate.ReadFromPfx(fullpath, txt_cert_pwd.Text.Trim());
+                string fullpath = Path.Combine(txt_cert_folder.Text.Trim(), txt_cert_name.Text.Trim());
+                IRsa rsa;
+                if (fullpath.ToLower().EndsWith(".pfx"))
+                {
+                    rsa = RsaCertificate.ReadFromPfx(fullpath, txt_cert_pwd.Text.Trim());
+                }
+                else
+                {
+                    rsa = RsaCertificate.ReadFromCert(fullpath);
+                }
+                txt_private_key.Text = rsa.HasPrivateKey ? rsa.PrivateKey : "";
+                txt_public_key.Text = rsa.PublicKey;
+                DisplayKeyPair();
             }
-            else
+            catch (Exception ex)
             {
-                rsa = RsaCertificate.ReadFromCert(fullpath);
+                MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            txt_private_key.Text = rsa.HasPrivateKey ? rsa.PrivateKey : "";
-            txt_public_key.Text = rsa.PublicKey;
-            DisplayKeyPair();
         }
 
         private void btnRsaEncrypt_Click(object sender, EventArgs e)
