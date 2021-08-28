@@ -1,4 +1,5 @@
-﻿using Javirs.Common.Security;
+﻿using Jareds.Common.Encrypt;
+using Jareds.Common.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -153,7 +154,7 @@ namespace encryptionTool
             var dr = fileDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
-                var rsa = Javirs.Common.Security.PemCertificate.ReadFromPemFile(fileDialog.FileName);
+                var rsa = PemCertificate.ReadFromPemFile(fileDialog.FileName);
                 txt_private_key.Text = rsa.HasPrivateKey ? rsa.PrivateKey : null;
                 txt_public_key.Text = rsa.PublicKey;
                 DisplayKeyPair();
@@ -248,8 +249,7 @@ namespace encryptionTool
             try
             {
                 IRsa rsa = GetRsaObject();
-                string signature = rsa.SignData(Encoding.UTF8.GetBytes(txt_plain.Text.Trim()), althm);
-                byte[] buffer = Convert.FromBase64String(signature);
+                byte[] buffer = rsa.SignData(Encoding.UTF8.GetBytes(txt_plain.Text.Trim()), althm);
                 txt_signature.Text = GetRsaCipherEncode().Encode(buffer);
             }
             catch (Exception ex)
@@ -264,17 +264,17 @@ namespace encryptionTool
             string keyString = isPrivate ? privateKey : pubKey;
             if (isPrivate && string.IsNullOrEmpty(privateKey))
             {
-                throw new Javirs.Common.Exceptions.InvalidKeyFormatException("请设置私钥先");
+                throw new InvalidKeyFormatException("请设置私钥先");
             }
             if (!isPrivate && string.IsNullOrEmpty(privateKey) && string.IsNullOrEmpty(pubKey))
             {
-                throw new Javirs.Common.Exceptions.InvalidKeyFormatException("请设置密钥先");
+                throw new InvalidKeyFormatException("请设置密钥先");
             }
             if (radio_rsa_key_format_pem.Checked || radio_rsa_key_format_pem_pkcs8.Checked)
             {
                 if (keyString.StartsWith("<"))
                 {
-                    throw new Javirs.Common.Exceptions.InvalidKeyFormatException("您设置的密钥可能是XML格式，请选择密钥格式");
+                    throw new InvalidKeyFormatException("您设置的密钥可能是XML格式，请选择密钥格式");
                 }
                 return PemCertificate.ReadFromKeyString(keyString);
             }
@@ -282,7 +282,7 @@ namespace encryptionTool
             {
                 if (!keyString.StartsWith("<"))
                 {
-                    throw new Javirs.Common.Exceptions.InvalidKeyFormatException("您设置的密钥不是XML格式，请选择密钥格式");
+                    throw new InvalidKeyFormatException("您设置的密钥不是XML格式，请选择密钥格式");
                 }
                 return new RSAServiceProvider(keyString);
             }

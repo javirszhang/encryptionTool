@@ -1,11 +1,9 @@
-﻿using Javirs.Common;
+﻿using Jareds.Common;
+using Jareds.Common.Encrypt;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace encryptionTool
 {
@@ -39,7 +37,7 @@ namespace encryptionTool
             if (radio_des_type_1des.Checked)
             {
 
-                Javirs.Common.Security.DesEncodeDecode des = new Javirs.Common.Security.DesEncodeDecode(
+                var des = new DesEncodeDecode(
                     Encoding.ASCII.GetString(key),
                     cipherMode,
                     paddingMode);
@@ -70,7 +68,7 @@ namespace encryptionTool
             }
             else
             {
-                var base64Res = Javirs.Common.Security.TripleDesEncodeDecode.TwiceDesEncrypt(key.Byte2HexString(), plainText);
+                var base64Res = TripleDesEncodeDecode.TwiceDesEncrypt(key.ByteArray2HexString(), plainText);
                 cipher = GetDesCipherEncode().Encode(Convert.FromBase64String(base64Res));
             }
             txt_des_cipher.Text = cipher;
@@ -84,7 +82,7 @@ namespace encryptionTool
             PaddingMode paddingMode = (PaddingMode)Enum.Parse(typeof(PaddingMode), cbox_des_padding_mode.SelectedItem.ToString());
             if (radio_des_type_1des.Checked)
             {
-                Javirs.Common.Security.DesEncodeDecode des = new Javirs.Common.Security.DesEncodeDecode(
+                var des = new DesEncodeDecode(
                     txt_des_key.Text.Trim(),
                     cipherMode,
                     paddingMode,
@@ -109,7 +107,7 @@ namespace encryptionTool
             }
             else
             {
-                var base64Res = Javirs.Common.Security.TripleDesEncodeDecode.TwiceDesDescrypt(key.Byte2HexString(), Convert.ToBase64String(cipherBytes));
+                var base64Res = TripleDesEncodeDecode.TwiceDesDescrypt(key.ByteArray2HexString(), Convert.ToBase64String(cipherBytes));
                 cipherBytes = Convert.FromBase64String(base64Res);
             }
             string plain = GetDesPlainEncoding().GetString(cipherBytes);

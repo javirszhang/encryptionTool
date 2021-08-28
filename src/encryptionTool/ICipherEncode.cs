@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Javirs.Common;
+﻿using Jareds.Common;
+using Jareds.Common.Encrypt;
+using System;
 
 namespace encryptionTool
 {
@@ -17,12 +14,12 @@ namespace encryptionTool
     {
         public byte[] Decode(string input)
         {
-            return Javirs.Common.Security.Base58.Decode(input);
+            return Base58.Decode(input);
         }
 
         public string Encode(byte[] buffer)
         {
-            return Javirs.Common.Security.Base58.Encode(buffer);
+            return Base58.Encode(buffer);
         }
     }
 
@@ -48,7 +45,7 @@ namespace encryptionTool
 
         public string Encode(byte[] buffer)
         {
-            return buffer.Byte2HexString();
+            return buffer.ByteArray2HexString();
         }
     }
 }

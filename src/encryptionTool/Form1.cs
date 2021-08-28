@@ -1,15 +1,16 @@
-﻿using Javirs.Common;
-using Javirs.Common.Security;
+﻿using encryptionTool.Common;
+using Jareds.Common;
+using Jareds.Common.Encrypt;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
 using System.Drawing;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,6 +20,7 @@ namespace encryptionTool
     {
         public Form1()
         {
+            IniFile iniFile = IniFile.Read(Path.Combine(AppContext.BaseDirectory, "setting.ini"));
             InitializeComponent();
             cbox_des_plain_encode.SelectedIndex = 0;
             cbox_des_cipher_encode.SelectedIndex = 0;
@@ -27,13 +29,14 @@ namespace encryptionTool
             cbox_des_cipher_mode.SelectedIndex = 1;
             cb_aes_cipher_mode.SelectedIndex = 1;
             cb_aes_padding_mode.SelectedIndex = 1;
-            txt_sign_key.Text = ConfigurationManager.AppSettings["api_sign_key"];
+            txt_sign_key.Text = iniFile?.GetSection("signature")?.GetValue("key");
+            txtJwtSeed.Text = iniFile?.GetSection("token")?.GetValue("seed");
         }
         #region aes
         private void btn_aes_encrypt_Click(object sender, EventArgs e)
         {
             byte[] keyBytes = getAesKeyBytes();
-            string hexKeyString = keyBytes.Byte2HexString();
+            string hexKeyString = keyBytes.ByteArray2HexString();
             AesCryptoProvider aes = new AesCryptoProvider(hexKeyString, check_aes_random.Checked);
             aes.CipherMode = GetAesCipherMode();
             aes.PaddingMode = GetAesPaddingMode();
@@ -97,7 +100,7 @@ namespace encryptionTool
         private void btn_aes_decrypt_Click(object sender, EventArgs e)
         {
             byte[] keyBytes = getAesKeyBytes();
-            string hexKeyString = keyBytes.Byte2HexString();
+            string hexKeyString = keyBytes.ByteArray2HexString();
             AesCryptoProvider aes = new AesCryptoProvider(hexKeyString, check_aes_random.Checked);
             aes.CipherMode = GetAesCipherMode();
             aes.PaddingMode = GetAesPaddingMode();
@@ -146,8 +149,8 @@ namespace encryptionTool
         private void btnMd5Encode_Click(object sender, EventArgs e)
         {
             var buff = GetMD5Encoding().GetBytes(txt_md5_plain.Text.Trim());
-            var result = Javirs.Common.Security.MD5.Encode(buff);
-            txt_md5_cipher.Text = result.Byte2HexString();
+            var result = MD5Provider.Encode(buff);
+            txt_md5_cipher.Text = result.ByteArray2HexString();
         }
         private Encoding GetMD5Encoding()
         {
@@ -159,7 +162,7 @@ namespace encryptionTool
         {
             var athm = System.Security.Cryptography.SHA1.Create();
             var buff = athm.ComputeHash(GetSHAEncoding().GetBytes(txt_sha_plain.Text.Trim()));
-            string cipher = buff.Byte2HexString();
+            string cipher = buff.ByteArray2HexString();
             txt_sha_cipher.Text = cipher;
         }
 
@@ -167,7 +170,7 @@ namespace encryptionTool
         {
             var athm = System.Security.Cryptography.SHA256.Create();
             var buff = athm.ComputeHash(GetSHAEncoding().GetBytes(txt_sha_plain.Text.Trim()));
-            string cipher = buff.Byte2HexString();
+            string cipher = buff.ByteArray2HexString();
             txt_sha_cipher.Text = cipher;
         }
 
@@ -175,7 +178,7 @@ namespace encryptionTool
         {
             var athm = System.Security.Cryptography.SHA512.Create();
             var buff = athm.ComputeHash(GetSHAEncoding().GetBytes(txt_sha_plain.Text.Trim()));
-            string cipher = buff.Byte2HexString();
+            string cipher = buff.ByteArray2HexString();
             txt_sha_cipher.Text = cipher;
         }
         private Encoding GetSHAEncoding()
@@ -204,8 +207,7 @@ namespace encryptionTool
         private void btnQrCodeGenerate_Click(object sender, EventArgs e)
         {
             QrCodeGeneration qrcode = new QrCodeGeneration();
-            Stream stream = qrcode.QrImage(txt_qrcode_text.Text.Trim());
-            Bitmap image = new Bitmap(stream);
+            var image = qrcode.QrImage(txt_qrcode_text.Text.Trim());
 
             picQrCode.Image = image;
             picQrCode.Width = image.Width > 469 ? 469 : image.Width;
@@ -232,7 +234,7 @@ namespace encryptionTool
             }
             sourceData += "key=" + txt_sign_key.Text.Trim();
             txt_sign_sourcedata.Text = sourceData;
-            string signature = Javirs.Common.Security.MD5.Encode(sourceData);
+            string signature = MD5Provider.Encode(sourceData);
             txt_sign_sign.Text = signature;
         }
 
@@ -258,6 +260,116 @@ namespace encryptionTool
                 builder.AppendLine(g);
             }
             txt_guid.Text = builder.ToString();
+        }
+
+        private void tabControl_Selected(object sender, TabControlEventArgs e)
+        {
+            this.txtJwtDecodeJson.Text = null;
+            this.txtJwtDecodeJson.Visible = false;
+            if (e.TabPage.Name == "tabPage_timestamp")
+            {
+                cts = new CancellationTokenSource();
+                txtCurTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                txtCurTimeStamp.Text = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+                this.btnStopTimeTicks.Text = "停止";
+                RefreshTimestamp(cts.Token);
+            }
+            else
+            {
+                cts?.Cancel();
+            }
+        }
+        private async Task RefreshTimestamp(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                var now = DateTime.Now;
+                this.Invoke((MethodInvoker)delegate
+                {
+                    this.lbl_current_time.Text = now.ToString();
+                    this.lbl_current_timestamp.Text = new DateTimeOffset(now).ToUnixTimeSeconds().ToString();
+                });
+                await Task.Delay(1000);
+            }
+        }
+        CancellationTokenSource cts = null;
+        private void btnStopTimeTicks_Click(object sender, EventArgs e)
+        {
+            if (cts == null)
+            {
+                this.btnStopTimeTicks.Text = "停止";
+                cts = new CancellationTokenSource();
+                RefreshTimestamp(cts.Token);
+            }
+            else
+            {
+                cts.Cancel();
+                cts = null;
+                this.btnStopTimeTicks.Text = "开始";
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            cts?.Cancel();
+            cts = null;
+        }
+
+        private void btnTicksToTime_Click(object sender, EventArgs e)
+        {
+            txtCurTimeStampTransform.Text = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(txtCurTimeStamp.Text)).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
+        private void btnTimeToTicks_Click(object sender, EventArgs e)
+        {
+            txtCurTimeTransform.Text = new DateTimeOffset(Convert.ToDateTime(txtCurTime.Text)).ToUnixTimeSeconds().ToString();
+        }
+
+        private void btnSensitiveDecode_Click(object sender, EventArgs e)
+        {
+            string token = txtJwtToken.Text;
+            if (!string.IsNullOrEmpty(token))
+            {
+                if (token.StartsWith("Bearer "))
+                {
+                    token = token[7..];
+                }
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                var res = handler.ReadJwtToken(token);
+                var dict = new Dictionary<string, string>();
+                foreach (var claim in res.Claims)
+                {
+                    if (claim.Type == "ticket")
+                    {
+                        txtJwtTickets.Text = claim.Value;
+                        dict.Add(claim.Type, claim.Value);
+                    }
+                    else if (claim.Type == "id" || claim.Type == "name")
+                    {
+                        dict.Add(claim.Type, Encoding.UTF8.GetString(Base58.Decode(claim.Value.Substring(1))));
+                    }
+                    else
+                    {
+                        dict.Add(claim.Type, claim.Value);
+                    }
+                }
+                this.txtJwtDecodeJson.Text = JsonConvert.SerializeObject(dict);
+                this.txtJwtDecodeJson.Visible = true;
+            }
+            string cipher = txtJwtSensitiveCipher.Text;
+            if (!string.IsNullOrEmpty(cipher))
+            {
+                string key = MD5Provider.Encode(txtJwtSeed.Text + txtJwtTickets.Text);
+                if (cipher.StartsWith("ZYS_"))
+                {
+                    cipher = cipher[4..];
+                }
+                byte[] byteArray = Base58.Decode(cipher);
+                DesEncodeDecode des = new DesEncodeDecode(key, CipherMode.ECB, PaddingMode.PKCS7, false);
+                var buffer = des.DesDecrypt(byteArray);
+                string str = Encoding.UTF8.GetString(buffer);
+                txtSensitivePlainText.Text = str;
+            }
         }
     }
 }

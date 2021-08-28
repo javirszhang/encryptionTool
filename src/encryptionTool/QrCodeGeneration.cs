@@ -1,41 +1,37 @@
-﻿using Gma.QrCodeNet.Encoding;
-using Gma.QrCodeNet.Encoding.Windows.Render;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ThoughtWorks.QRCode.Codec;
 
 namespace encryptionTool
 {
     public class QrCodeGeneration
     {
-        public Stream QrImage(string text)
+        public Bitmap QrImage(string text)
         {
-            var ms = new MemoryStream();
-            ErrorCorrectionLevel Ecl = ErrorCorrectionLevel.M; //误差校正水平   
-            string Content = text;//待编码内容  
-            QuietZoneModules QuietZones = QuietZoneModules.Two;  //空白区域   
-            int ModuleSize = 12;//大小  
-            var encoder = new QrEncoder(Ecl);
-            QrCode qr;
-            if (encoder.TryEncode(Content, out qr))//对内容进行编码，并保存生成的矩阵  
+            QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
+            qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
+            qrCodeEncoder.QRCodeScale = 14;
+            qrCodeEncoder.QRCodeVersion = 12;
+            string qrCodeErrorCorrect = "H";
+            switch (qrCodeErrorCorrect)
             {
-                FixedModuleSize fms = new FixedModuleSize(ModuleSize, QuietZones);//Color.FromArgb(1, 127, 38, 0)
-                Brush darkBrush = new SolidBrush(TranslateHexToRGBColor("C8000000"));//(Color.FromArgb(127, 38, 0));
-                Brush lightBrush = new SolidBrush(TranslateHexToRGBColor("00ffffff")); //Brushes.Transparent;
-                var render = new GraphicsRenderer(fms, darkBrush, lightBrush);
-                render.WriteToStream(qr.Matrix, ImageFormat.Png, ms);
-                return ms;
+                case "H":
+                    qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.H;
+                    break;
+                case "L":
+                    qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.L;
+                    break;
+                case "M":
+                    qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
+                    break;
+                case "Q":
+                    qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.Q;
+                    break;
             }
-            else
-            {
-                
-                return null;
-            }
+            qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.L;
+            Bitmap bmPhoto = qrCodeEncoder.Encode(text, System.Text.Encoding.GetEncoding("UTF-8"));
+            return bmPhoto;
         }
 
         /// <summary>
