@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -31,6 +32,7 @@ namespace encryptionTool
             cb_aes_padding_mode.SelectedIndex = 1;
             txt_sign_key.Text = iniFile?.GetSection("signature")?.GetValue("key");
             txtJwtSeed.Text = iniFile?.GetSection("token")?.GetValue("seed");
+            cb_passwd_length.SelectedIndex = 5;
         }
         #region aes
         private void btn_aes_encrypt_Click(object sender, EventArgs e)
@@ -272,7 +274,7 @@ namespace encryptionTool
                 txtCurTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 txtCurTimeStamp.Text = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
                 this.btnStopTimeTicks.Text = "停止";
-                RefreshTimestamp(cts.Token);
+                _ = RefreshTimestamp(cts.Token);
             }
             else
             {
@@ -299,7 +301,7 @@ namespace encryptionTool
             {
                 this.btnStopTimeTicks.Text = "停止";
                 cts = new CancellationTokenSource();
-                RefreshTimestamp(cts.Token);
+                _ = RefreshTimestamp(cts.Token);
             }
             else
             {
@@ -337,6 +339,7 @@ namespace encryptionTool
                 JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
                 var res = handler.ReadJwtToken(token);
                 var dict = new Dictionary<string, string>();
+                string[] encodedItemNames = { "id", "name", "sid", "stid" };
                 foreach (var claim in res.Claims)
                 {
                     if (claim.Type == "ticket")
@@ -344,9 +347,9 @@ namespace encryptionTool
                         txtJwtTickets.Text = claim.Value;
                         dict.Add(claim.Type, claim.Value);
                     }
-                    else if (claim.Type == "id" || claim.Type == "name")
+                    else if (encodedItemNames.Contains(claim.Type))
                     {
-                        dict.Add(claim.Type, Encoding.UTF8.GetString(Base58.Decode(claim.Value.Substring(1))));
+                        dict.Add(claim.Type, Encoding.UTF8.GetString(Base58.Decode(claim.Value[1..])));
                     }
                     else
                     {
@@ -370,6 +373,48 @@ namespace encryptionTool
                 string str = Encoding.UTF8.GetString(buffer);
                 txtSensitivePlainText.Text = str;
             }
+        }
+
+        private void btnGeneratePasswd_Click(object sender, EventArgs e)
+        {
+            string[] bigCase = new string[26];
+            string[] smallCase = new string[26];
+            string[] numbers = new string[10];
+            string[] specialChars = { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")" };
+            for (int i = 0; i < 26; i++)
+            {
+                bigCase[i] = ((char)(i + 65)).ToString();
+                smallCase[i] = ((char)(i + 97)).ToString();
+                if (i < 10)
+                {
+                    numbers[i] = i.ToString();
+                }
+            }
+            List<string> pool = new List<string>();
+            if (cb_bigCase.Checked)
+            {
+                pool.AddRange(bigCase);
+            }
+            if (cb_smallCase.Checked)
+            {
+                pool.AddRange(smallCase);
+            }
+            if (cb_numbers.Checked)
+            {
+                pool.AddRange(numbers);
+            }
+            if (cb_special_char.Checked)
+            {
+                pool.AddRange(specialChars);
+            }
+            int length = int.Parse(cb_passwd_length.SelectedItem.ToString());
+            StringBuilder sb = new StringBuilder();
+            Random r = new Random();
+            for (int i = 0; i < length; i++)
+            {
+                sb.Append(pool[r.Next(pool.Count)]);
+            }
+            txtPasswordOutput.Text = sb.ToString();
         }
     }
 }

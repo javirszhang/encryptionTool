@@ -231,6 +231,16 @@
             this.txtJwtSeed = new System.Windows.Forms.TextBox();
             this.label46 = new System.Windows.Forms.Label();
             this.txtJwtToken = new System.Windows.Forms.TextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.txtPasswordOutput = new System.Windows.Forms.TextBox();
+            this.btnGeneratePasswd = new System.Windows.Forms.Button();
+            this.cb_passwd_length = new System.Windows.Forms.ComboBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.cb_special_char = new System.Windows.Forms.CheckBox();
+            this.cb_numbers = new System.Windows.Forms.CheckBox();
+            this.cb_smallCase = new System.Windows.Forms.CheckBox();
+            this.cb_bigCase = new System.Windows.Forms.CheckBox();
+            this.label51 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage_rsa.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -253,6 +263,7 @@
             this.tabPage3.SuspendLayout();
             this.tabPage_timestamp.SuspendLayout();
             this.tabPage_jwt.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -270,6 +281,7 @@
             this.tabControl.Controls.Add(this.tabPage3);
             this.tabControl.Controls.Add(this.tabPage_timestamp);
             this.tabControl.Controls.Add(this.tabPage_jwt);
+            this.tabControl.Controls.Add(this.tabPage4);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tabControl.ItemSize = new System.Drawing.Size(80, 35);
@@ -2564,6 +2576,125 @@
             this.txtJwtToken.Size = new System.Drawing.Size(808, 161);
             this.txtJwtToken.TabIndex = 0;
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.txtPasswordOutput);
+            this.tabPage4.Controls.Add(this.btnGeneratePasswd);
+            this.tabPage4.Controls.Add(this.cb_passwd_length);
+            this.tabPage4.Controls.Add(this.label52);
+            this.tabPage4.Controls.Add(this.cb_special_char);
+            this.tabPage4.Controls.Add(this.cb_numbers);
+            this.tabPage4.Controls.Add(this.cb_smallCase);
+            this.tabPage4.Controls.Add(this.cb_bigCase);
+            this.tabPage4.Controls.Add(this.label51);
+            this.tabPage4.Location = new System.Drawing.Point(4, 39);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1054, 787);
+            this.tabPage4.TabIndex = 13;
+            this.tabPage4.Text = "密码生成器";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // txtPasswordOutput
+            // 
+            this.txtPasswordOutput.Location = new System.Drawing.Point(265, 346);
+            this.txtPasswordOutput.Multiline = true;
+            this.txtPasswordOutput.Name = "txtPasswordOutput";
+            this.txtPasswordOutput.Size = new System.Drawing.Size(451, 137);
+            this.txtPasswordOutput.TabIndex = 6;
+            // 
+            // btnGeneratePasswd
+            // 
+            this.btnGeneratePasswd.Location = new System.Drawing.Point(265, 257);
+            this.btnGeneratePasswd.Name = "btnGeneratePasswd";
+            this.btnGeneratePasswd.Size = new System.Drawing.Size(451, 34);
+            this.btnGeneratePasswd.TabIndex = 5;
+            this.btnGeneratePasswd.Text = "生成密码";
+            this.btnGeneratePasswd.UseVisualStyleBackColor = true;
+            this.btnGeneratePasswd.Click += new System.EventHandler(this.btnGeneratePasswd_Click);
+            // 
+            // cb_passwd_length
+            // 
+            this.cb_passwd_length.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_passwd_length.FormattingEnabled = true;
+            this.cb_passwd_length.Items.AddRange(new object[] {
+            "6",
+            "8",
+            "10",
+            "12",
+            "14",
+            "16",
+            "18",
+            "20"});
+            this.cb_passwd_length.Location = new System.Drawing.Point(383, 174);
+            this.cb_passwd_length.Name = "cb_passwd_length";
+            this.cb_passwd_length.Size = new System.Drawing.Size(333, 23);
+            this.cb_passwd_length.TabIndex = 4;
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(265, 177);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(88, 17);
+            this.label52.TabIndex = 3;
+            this.label52.Text = "密码长度：";
+            // 
+            // cb_special_char
+            // 
+            this.cb_special_char.AutoSize = true;
+            this.cb_special_char.Location = new System.Drawing.Point(625, 95);
+            this.cb_special_char.Name = "cb_special_char";
+            this.cb_special_char.Size = new System.Drawing.Size(91, 21);
+            this.cb_special_char.TabIndex = 2;
+            this.cb_special_char.Text = "特殊字符";
+            this.cb_special_char.UseVisualStyleBackColor = true;
+            // 
+            // cb_numbers
+            // 
+            this.cb_numbers.AutoSize = true;
+            this.cb_numbers.Checked = true;
+            this.cb_numbers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_numbers.Location = new System.Drawing.Point(542, 95);
+            this.cb_numbers.Name = "cb_numbers";
+            this.cb_numbers.Size = new System.Drawing.Size(51, 21);
+            this.cb_numbers.TabIndex = 2;
+            this.cb_numbers.Text = "0-9";
+            this.cb_numbers.UseVisualStyleBackColor = true;
+            // 
+            // cb_smallCase
+            // 
+            this.cb_smallCase.AutoSize = true;
+            this.cb_smallCase.Checked = true;
+            this.cb_smallCase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_smallCase.Location = new System.Drawing.Point(457, 95);
+            this.cb_smallCase.Name = "cb_smallCase";
+            this.cb_smallCase.Size = new System.Drawing.Size(51, 21);
+            this.cb_smallCase.TabIndex = 2;
+            this.cb_smallCase.Text = "a-z";
+            this.cb_smallCase.UseVisualStyleBackColor = true;
+            // 
+            // cb_bigCase
+            // 
+            this.cb_bigCase.AutoSize = true;
+            this.cb_bigCase.Checked = true;
+            this.cb_bigCase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_bigCase.Location = new System.Drawing.Point(383, 95);
+            this.cb_bigCase.Name = "cb_bigCase";
+            this.cb_bigCase.Size = new System.Drawing.Size(51, 21);
+            this.cb_bigCase.TabIndex = 1;
+            this.cb_bigCase.Text = "A-Z";
+            this.cb_bigCase.UseVisualStyleBackColor = true;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(265, 97);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(88, 17);
+            this.label51.TabIndex = 0;
+            this.label51.Text = "字符选项：";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -2619,6 +2750,8 @@
             this.tabPage_timestamp.PerformLayout();
             this.tabPage_jwt.ResumeLayout(false);
             this.tabPage_jwt.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2828,6 +2961,16 @@
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Button btnSensitiveDecode;
         private System.Windows.Forms.TextBox txtJwtDecodeJson;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.ComboBox cb_passwd_length;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.CheckBox cb_special_char;
+        private System.Windows.Forms.CheckBox cb_numbers;
+        private System.Windows.Forms.CheckBox cb_smallCase;
+        private System.Windows.Forms.CheckBox cb_bigCase;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.Button btnGeneratePasswd;
+        private System.Windows.Forms.TextBox txtPasswordOutput;
     }
 }
 
